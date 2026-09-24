@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Glowing circular boundary badge -->
+    <path
+        android:pathData="M54,23 A31,31 0 1,1 53.9,23 Z"
+        android:strokeWidth="2"
+        android:strokeColor="#00E5FF"
+        android:fillColor="#1000E5FF" />
+
+    <!-- Bus Body Outline & Fill -->
+    <!-- Bus main body: left 36, right 72, top 34, bottom 72, rounded corners -->
+    <path
+        android:pathData="M40,34 L68,34 C71.3,34 74,36.7 74,40 L74,68 C74,70.5 72.3,72.6 70,73.3 L70,76 C70,77.1 69.1,78 68,78 L65,78 C63.9,78 63,77.1 63,76 L63,74 L45,74 L45,76 C45,77.1 44.1,78 43,78 L40,78 C38.9,78 38,77.1 38,76 L38,73.3 C35.7,72.6 34,70.5 34,68 L34,40 C34,36.7 36.7,34 40,34 Z"
+        android:fillColor="#00E5FF" />
+
+    <!-- Windshield glass -->
+    <path
+        android:pathData="M38,44 L70,44 L70,55 L38,55 Z"
+        android:fillColor="#0A1628" />
+
+    <!-- Route display bar above windshield -->
+    <path
+        android:pathData="M44,37 L64,37 L64,40 L44,40 Z"
+        android:fillColor="#FFD600" />
+
+    <!-- Headlights -->
+    <!-- Left headlight -->
+    <path
+        android:pathData="M41,64 A3,3 0 1,1 40.9,64 Z"
+        android:fillColor="#FFFFFF" />
+    <!-- Right headlight -->
+    <path
+        android:pathData="M67,64 A3,3 0 1,1 66.9,64 Z"
+        android:fillColor="#FFFFFF" />
+
+    <!-- Center Grille line -->
+    <path
+        android:pathData="M48,64 L60,64"
+        android:strokeWidth="2"
+        android:strokeColor="#0A1628"
+        android:strokeLineCap="round" />
+    <path
+        android:pathData="M50,68 L58,68"
+        android:strokeWidth="1.5"
+        android:strokeColor="#0A1628"
+        android:strokeLineCap="round" />
+</vector>

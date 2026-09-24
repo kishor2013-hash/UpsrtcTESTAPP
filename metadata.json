@@ -1,0 +1,6 @@
+{
+  "name": "UPSRTC Duty Portal",
+  "description": "UPSRTC Roadways Digital Duty Portal V4.0 for drivers and conductors",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
