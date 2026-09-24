@@ -207,6 +207,12 @@
       position: relative;
     }
 
+    .avatar-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
     .avatar-frame svg {
       width: 32px;
       height: 32px;
@@ -270,6 +276,12 @@
       cursor: pointer;
       border: 1.2px solid transparent;
       transition: all 0.2s;
+    }
+
+    .icon-action-btn.btn-profile {
+      background: #0F254B;
+      border-color: #2563EB;
+      color: #FFFFFF;
     }
 
     .icon-action-btn.btn-logout {
@@ -399,6 +411,10 @@
 
     .card-cyan { --card-theme: var(--cyan); --card-glow: var(--cyan-glow); }
     .card-yellow { --card-theme: var(--yellow); --card-glow: var(--yellow-glow); }
+    .card-blue { --card-theme: var(--blue); --card-glow: var(--blue-glow); }
+    .card-green { --card-theme: var(--green); --card-glow: var(--green-glow); }
+    .card-red { --card-theme: var(--red); --card-glow: var(--red-glow); }
+    .card-purple { --card-theme: var(--purple); --card-glow: var(--purple-glow); }
 
     .footer-branding {
       text-align: center;
@@ -500,7 +516,7 @@
         </div>
         <h1 style="color: var(--yellow); font-size: 24px; font-weight: 900; letter-spacing: 0.5px;">UPSRTC ROADWAYS</h1>
         <p style="color: var(--cyan); font-size: 13px; font-weight: 700; letter-spacing: 1px; margin-top: 4px;">DIGITAL DUTY PORTAL</p>
-        <p style="color: var(--text-gray); font-size: 12px; margin-top: 6px;">Staff Duty Management Gateway</p>
+        <p style="color: var(--text-gray); font-size: 12px; margin-top: 6px;">Drivers & Conductors Duty Management</p>
       </div>
 
       <div style="margin: 8px 20px; padding: 22px; background: #0B172E; border: 1.2px solid var(--border-blue); border-radius: var(--radius-lg); box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
@@ -509,12 +525,12 @@
         <form id="login-form" onsubmit="handleLoginSubmit(event)">
           <div class="form-group">
             <label class="form-label">Employee ID / Email / Mobile *</label>
-            <input type="text" id="login-identifier" class="form-input" placeholder="Enter Employee ID" required autocomplete="off">
+            <input type="text" id="login-identifier" class="form-input" placeholder="Apna Employee ID ya Mobile No dalein" required>
           </div>
 
           <div class="form-group">
             <label class="form-label">Password *</label>
-            <input type="password" id="login-password" class="form-input" placeholder="Enter Password" required autocomplete="off">
+            <input type="password" id="login-password" class="form-input" placeholder="Password dalein" required>
           </div>
 
           <button type="submit" class="btn" style="width: 100%; height: 46px; background: var(--cyan); color: #070D1E; font-size: 14px; margin-top: 8px;">
@@ -523,7 +539,7 @@
         </form>
 
         <div style="margin-top: 18px; text-align: center; font-size: 12px; color: var(--text-gray);">
-          नया खाता बनाएँ? <a href="javascript:void(0)" onclick="navigateTo('screen-register')" style="color: var(--yellow); font-weight: 700; text-decoration: none;">Register New Account</a>
+          Naya account banana hai? <a href="javascript:void(0)" onclick="navigateTo('screen-register')" style="color: var(--yellow); font-weight: 700; text-decoration: none;">Register New Account</a>
         </div>
       </div>
     </div>
@@ -534,7 +550,7 @@
         <button class="btn" onclick="navigateTo('screen-login')" style="width: 36px; height: 36px; background: #0B172E; color: var(--cyan); border: 1px solid var(--border-blue);">←</button>
         <div>
           <h2 style="color: var(--cyan); font-size: 16px; font-weight: 900;">STAFF REGISTRATION</h2>
-          <p style="color: var(--text-gray); font-size: 11px;">Create your official portal profile</p>
+          <p style="color: var(--text-gray); font-size: 11px;">Official UPSRTC Account Setup</p>
         </div>
       </div>
 
@@ -544,7 +560,7 @@
           
           <div class="form-group">
             <label class="form-label">Full Name *</label>
-            <input type="text" id="reg-name" class="form-input" placeholder="Enter your full name" required>
+            <input type="text" id="reg-name" class="form-input" placeholder="Poora Naam" required>
           </div>
 
           <div class="input-row">
@@ -560,17 +576,17 @@
 
           <div class="form-group">
             <label class="form-label">Email *</label>
-            <input type="email" id="reg-email" class="form-input" placeholder="e.g. user@upsrtc.in" required>
+            <input type="email" id="reg-email" class="form-input" placeholder="name@domain.com" required>
           </div>
 
           <div class="input-row">
             <div class="form-group">
               <label class="form-label">Password *</label>
-              <input type="password" id="reg-pass" class="form-input" placeholder="Password" minlength="4" required>
+              <input type="password" id="reg-pass" class="form-input" minlength="4" required>
             </div>
             <div class="form-group">
               <label class="form-label">Confirm Password *</label>
-              <input type="password" id="reg-confirm-pass" class="form-input" placeholder="Re-enter" minlength="4" required>
+              <input type="password" id="reg-confirm-pass" class="form-input" minlength="4" required>
             </div>
           </div>
 
@@ -578,7 +594,7 @@
 
           <div class="input-row">
             <div class="form-group">
-              <label class="form-label">Employee ID *</label>
+              <label class="form-label">Employee ID / CND *</label>
               <input type="text" id="reg-empid" class="form-input" placeholder="e.g. CND 1001" required>
             </div>
             <div class="form-group">
@@ -593,17 +609,17 @@
           <div class="input-row">
             <div class="form-group">
               <label class="form-label">Depot Name *</label>
-              <input type="text" id="reg-depot" class="form-input" placeholder="Enter Depot name" required>
+              <input type="text" id="reg-depot" class="form-input" placeholder="Depot ka Naam" required>
             </div>
             <div class="form-group">
               <label class="form-label">Depot Code</label>
-              <input type="text" id="reg-depot-code" class="form-input" placeholder="Optional code">
+              <input type="text" id="reg-depot-code" class="form-input" placeholder="Depot Code">
             </div>
           </div>
 
           <div class="form-group">
             <label class="form-label">Designation</label>
-            <input type="text" id="reg-designation" class="form-input" placeholder="e.g. Conductor">
+            <input type="text" id="reg-designation" class="form-input" placeholder="Designation">
           </div>
 
           <button type="submit" class="btn" style="width: 100%; height: 48px; background: var(--cyan); color: #070D1E; font-size: 14px; margin-top: 10px;">
@@ -639,8 +655,8 @@
           </div>
           <div class="profile-text-lines">
             <div class="profile-line-1">
-              <span id="dash-user-name">Loading...</span>
-              <span class="profile-cnd-badge" id="dash-user-cnd">| -- |</span>
+              <span id="dash-user-name">User</span>
+              <span class="profile-cnd-badge" id="dash-user-cnd">| ID |</span>
             </div>
             <div class="profile-line-2" id="dash-user-depot">DEPOT</div>
             <div class="profile-line-3" id="dash-user-verified">Verified Staff</div>
@@ -668,7 +684,7 @@
             <div class="deck-card-badge">FEED FORM</div>
           </div>
           <div class="deck-card-title">FEED DUTY</div>
-          <div class="deck-card-desc">Enter bus number, route, income ₹, and kilometers.</div>
+          <div class="deck-card-desc">Bus no., route, income, load factor aur KM submit karein.</div>
           <div class="deck-card-action-pill">Open Entry Form →</div>
         </div>
 
@@ -680,7 +696,7 @@
             <div class="deck-card-badge">REPORTS</div>
           </div>
           <div class="deck-card-title">SHOW DATA</div>
-          <div class="deck-card-desc">View monthly records, calculations and delete entries.</div>
+          <div class="deck-card-desc">Monthly records aur verified PDF printout dekhein.</div>
           <div class="deck-card-action-pill">View Records →</div>
         </div>
       </div>
@@ -692,7 +708,7 @@
         <button class="btn" onclick="navigateTo('screen-dashboard')" style="width: 36px; height: 36px; background: #0B172E; color: var(--cyan); border: 1px solid var(--border-blue);">←</button>
         <div>
           <h2 style="color: var(--cyan); font-size: 16px; font-weight: 900;">FEED DUTY ENTRY</h2>
-          <p style="color: var(--text-gray); font-size: 11px;">Record daily bus duty logs</p>
+          <p style="color: var(--text-gray); font-size: 11px;">Record Daily Bus Route, KM & Income Logs</p>
         </div>
       </div>
 
@@ -721,18 +737,18 @@
             </div>
             <div class="form-group">
               <label class="form-label">Bus Number *</label>
-              <input type="text" id="duty-bus" class="form-input" placeholder="Bus Number" required>
+              <input type="text" id="duty-bus" class="form-input" placeholder="e.g. UP15BT1234" required>
             </div>
           </div>
 
           <div class="input-row">
             <div class="form-group">
               <label class="form-label">Route From *</label>
-              <input type="text" id="duty-from" class="form-input" placeholder="From Station" required>
+              <input type="text" id="duty-from" class="form-input" placeholder="Kahan se" required>
             </div>
             <div class="form-group">
               <label class="form-label">Route To *</label>
-              <input type="text" id="duty-to" class="form-input" placeholder="To Destination" required>
+              <input type="text" id="duty-to" class="form-input" placeholder="Kahan tak" required>
             </div>
           </div>
 
@@ -754,7 +770,7 @@
             </div>
             <div class="form-group">
               <label class="form-label">Total Income (₹) *</label>
-              <input type="number" id="duty-income" class="form-input" placeholder="Amount (₹)" required>
+              <input type="number" id="duty-income" class="form-input" placeholder="Income" required>
             </div>
           </div>
 
@@ -797,23 +813,7 @@
 
   <script>
     const STORAGE_KEY_USER = 'upsrtc_current_user_v4';
-
-    // पूरा पुराना डमी डेटा (Surendra, CND 1901 आदि) साफ़ करें
-    function cleanOldDummyData() {
-      const u = localStorage.getItem(STORAGE_KEY_USER);
-      if (u) {
-        try {
-          const parsed = JSON.parse(u);
-          if (parsed.employeeId === 'CND 1901' || parsed.fullName === 'Surendra') {
-            localStorage.removeItem(STORAGE_KEY_USER);
-          }
-        } catch (e) {
-          localStorage.removeItem(STORAGE_KEY_USER);
-        }
-      }
-      localStorage.removeItem('upsrtc_users_db_v4');
-      localStorage.removeItem('upsrtc_duties_db_v4');
-    }
+    const STORAGE_KEY_DUTIES = 'upsrtc_duties_db_v4';
 
     function getCurrentUser() {
       const u = localStorage.getItem(STORAGE_KEY_USER);
@@ -857,7 +857,7 @@
       const identifier = document.getElementById('login-identifier').value.trim();
       const password = document.getElementById('login-password').value.trim();
 
-      showToast('लॉगिन जाँचा जा रहा है...');
+      showToast('Login check kiya ja raha hai...');
 
       try {
         const response = await fetch('save_data.php', {
@@ -869,13 +869,14 @@
 
         if (result.status === 'success') {
           setCurrentUser(result.user);
-          showToast('लॉगिन सफल! स्वागत है ' + result.user.fullName);
+          showToast('Login Safal! Welcome ' + result.user.fullName);
           navigateTo('screen-dashboard');
+          return;
         } else {
-          alert(result.message || 'गलत आईडी या पासवर्ड!');
+          alert(result.message || 'Galat ID ya Password');
         }
       } catch (err) {
-        alert('सर्वर से कनेक्ट नहीं हो सका। कृपया इंटरनेट या सर्वर कनेक्शन जाँचें।');
+        alert('Server se connect nahi ho saka. Kripya connection check karein.');
       }
     }
 
@@ -885,7 +886,7 @@
       const confirmPass = document.getElementById('reg-confirm-pass').value;
 
       if (pass !== confirmPass) {
-        alert('दोनों पासवर्ड मेल नहीं खा रहे हैं!');
+        alert('Dono password match nahi ho rahe!');
         return;
       }
 
@@ -902,7 +903,7 @@
         employeeType: document.getElementById('reg-type').value
       };
 
-      showToast('खाता सर्वर पर बनाया जा रहा है...');
+      showToast('Account server par save ho raha hai...');
 
       try {
         const response = await fetch('save_data.php', {
@@ -914,13 +915,13 @@
 
         if (result.status === 'success') {
           setCurrentUser(newUser);
-          showToast('रजिस्ट्रेशन सफल!');
+          showToast('Registration Safal!');
           navigateTo('screen-dashboard');
         } else {
-          alert('सर्वर एरर: ' + result.message);
+          alert('Server Error: ' + result.message);
         }
       } catch (err) {
-        alert('सर्वर कनेक्ट नहीं हो सका!');
+        alert('Server connect nahi ho saka!');
       }
     }
 
@@ -951,7 +952,7 @@
         remarks: ''
       };
 
-      showToast('ड्यूटी सर्वर पर सेव हो रही है...');
+      showToast('Duty save ho rahi hai...');
 
       try {
         const response = await fetch('save_data.php', {
@@ -962,16 +963,17 @@
         const result = await response.json();
 
         if (result.status === 'success') {
-          showToast('ड्यूटी सर्वर पर सुरक्षित हो गई!');
+          showToast('Duty Server Par Save Ho Gayi!');
+          // Form reset
           document.getElementById('feed-duty-form').reset();
           document.getElementById('duty-date').value = new Date().toISOString().split('T')[0];
           document.getElementById('duty-total-km').value = '0';
           navigateTo('screen-show-data');
         } else {
-          showToast('एरर: ' + result.message);
+          showToast('Error: ' + result.message);
         }
       } catch (err) {
-        showToast('सर्वर पर सेव नहीं हो सका!');
+        showToast('Server par save nahi ho paya.');
       }
     }
 
@@ -980,7 +982,7 @@
       if (!user) return;
 
       const tbody = document.getElementById('duty-table-body');
-      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:15px; color:#aaa;">डेटा लोड हो रहा है...</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:15px; color:#aaa;">Loading...</td></tr>';
 
       try {
         const res = await fetch('save_data.php', {
@@ -993,10 +995,10 @@
         if (data.status === 'success' && data.duties && data.duties.length > 0) {
           renderDutyTable(data.duties);
         } else {
-          tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:15px; color:#aaa;">अभी कोई ड्यूटी रिकॉर्ड नहीं है</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:15px; color:#aaa;">Abhi koi duty record nahi hai</td></tr>';
         }
       } catch (e) {
-        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:15px; color:#aaa;">डेटा लोड नहीं हो सका</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:15px; color:#aaa;">Data load nahi ho saka</td></tr>';
       }
     }
 
@@ -1014,7 +1016,7 @@
           <td style="padding: 10px 8px;">${d.total_km}</td>
           <td style="padding: 10px 8px; color: var(--green);">₹${d.income}</td>
           <td style="padding: 10px 8px;">
-            <button onclick="deleteDuty('${d.duty_unique_id}')" style="background: none; border: none; color: var(--red); cursor: pointer; font-size: 14px;" title="Delete">🗑️</button>
+            <button onclick="deleteDuty('${d.duty_unique_id}')" style="background: none; border: none; color: var(--red); cursor: pointer; font-size: 14px;">🗑️</button>
           </td>
         `;
         tbody.appendChild(tr);
@@ -1022,7 +1024,7 @@
     }
 
     async function deleteDuty(id) {
-      if (!confirm('क्या आप सचमुच इस ड्यूटी को सर्वर से डिलीट करना चाहते हैं?')) return;
+      if (!confirm('Kya aap is duty record ko server se delete karna chahte hain?')) return;
       const user = getCurrentUser();
 
       try {
@@ -1033,13 +1035,13 @@
         });
         const result = await response.json();
         if (result.status === 'success') {
-          showToast('रिकॉर्ड सर्वर से हमेशा के लिए हट गया!');
+          showToast('Record server se delete ho gaya!');
           loadUserDuties();
         } else {
-          showToast('डिलीट एरर: ' + result.message);
+          showToast('Delete error: ' + result.message);
         }
       } catch (e) {
-        showToast('सर्वर से डिलीट नहीं हो सका!');
+        showToast('Server delete fail');
       }
     }
 
@@ -1051,12 +1053,12 @@
       }
       document.getElementById('dash-user-name').textContent = user.fullName || 'User';
       document.getElementById('dash-user-cnd').textContent = `| ${user.employeeId} |`;
-      document.getElementById('dash-user-depot').textContent = user.depot || 'DEPOT';
+      document.getElementById('dash-user-depot').textContent = user.depot || 'UPSRTC DEPOT';
       document.getElementById('dash-user-verified').textContent = `${user.designation || 'Staff'} • ${user.depot || ''}`;
     }
 
     function confirmLogout() {
-      if (confirm('क्या आप लॉगआउट करना चाहते हैं?')) {
+      if (confirm('Kya aap logout karna chahte hain?')) {
         setCurrentUser(null);
         navigateTo('screen-login');
       }
@@ -1073,13 +1075,9 @@
     setInterval(updateLiveClock, 1000);
 
     window.addEventListener('DOMContentLoaded', () => {
-      cleanOldDummyData();
       updateLiveClock();
-      if (getCurrentUser()) {
-        navigateTo('screen-dashboard');
-      } else {
-        navigateTo('screen-login');
-      }
+      if (getCurrentUser()) navigateTo('screen-dashboard');
+      else navigateTo('screen-login');
     });
   </script>
 </body>
