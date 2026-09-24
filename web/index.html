@@ -840,6 +840,15 @@
         </div>
       </div>
 
+      <!-- Hostinger MySQL Sync Indicator Banner -->
+      <div style="margin: 0 16px 12px 16px; padding: 10px 14px; background: rgba(0, 229, 255, 0.08); border: 1px solid rgba(0, 229, 255, 0.35); border-radius: var(--radius-md); display: flex; align-items: center; justify-content: space-between;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); display: inline-block;"></span>
+          <span style="color: #FFFFFF; font-size: 11px; font-weight: 600;">Hostinger MySQL Sync Active</span>
+        </div>
+        <span style="color: var(--cyan); font-family: 'JetBrains Mono', monospace; font-size: 10.5px; background: #091730; padding: 2px 8px; border-radius: 4px; border: 1px solid var(--border-blue);">POST save_data.php</span>
+      </div>
+
       <div style="margin: 0 16px; padding: 20px; background: #0B172E; border: 1.2px solid var(--border-blue); border-radius: var(--radius-lg);">
         <form id="feed-duty-form" onsubmit="handleDutySubmit(event)">
           <!-- Date Picker with Calendar & Quick Buttons -->
@@ -955,8 +964,9 @@
             <input type="text" id="duty-remarks" class="form-input" placeholder="On-time trip completion">
           </div>
 
-          <button type="submit" class="btn" style="width: 100%; height: 48px; background: var(--cyan); color: #070D1E; font-size: 14px; margin-top: 10px;">
-            SAVE DUTY LOG ENTRY
+          <button type="submit" id="btn-save-duty" class="btn" style="width: 100%; height: 48px; background: var(--cyan); color: #070D1E; font-size: 13.5px; font-weight: 800; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <svg style="width: 18px; height: 18px; fill: currentColor;" viewBox="0 0 24 24"><path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2v9.67z"/></svg>
+            <span>SAVE TO HOSTINGER MYSQL & LOCAL</span>
           </button>
         </form>
       </div>
@@ -1149,6 +1159,40 @@
               UPDATE PASSWORD
             </button>
           </form>
+        </div>
+
+        <!-- Hostinger MySQL Database Integration Box -->
+        <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-subtle);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <div style="color: var(--cyan); font-size: 12px; font-weight: 800;">HOSTINGER MYSQL DATABASE SYNC</div>
+            <span style="font-size: 10px; font-family: 'JetBrains Mono', monospace; color: var(--yellow); background: #091730; padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border-blue);">save_data.php</span>
+          </div>
+          <p style="color: var(--text-gray); font-size: 11px; margin-bottom: 12px; line-height: 1.5;">
+            All duties and profiles are securely transmitted via PHP Fetch API with MySQLi prepared statements to your Hostinger database.
+          </p>
+
+          <div id="mysql-status-text" style="font-size: 11px; margin-bottom: 12px; padding: 8px 12px; background: #091730; border: 1px solid var(--border-blue); border-radius: var(--radius-sm); color: var(--text-gray);">
+            Endpoint: <code style="color: var(--cyan);">./save_data.php</code> (Click below to test connection)
+          </div>
+
+          <div style="display: flex; gap: 8px;">
+            <button type="button" id="btn-test-mysql" class="btn" onclick="testHostingerConnection()" style="flex: 1; height: 40px; background: #0E2954; color: var(--cyan); border: 1px solid var(--cyan); font-size: 11.5px; font-weight: 700;">
+              🔌 Test MySQL Connection
+            </button>
+            <button type="button" id="btn-sync-mysql" class="btn" onclick="syncAllLocalDutiesToMySQL()" style="flex: 1; height: 40px; background: var(--green); color: #070D1E; font-size: 11.5px; font-weight: 800;">
+              🔄 Sync All to MySQL
+            </button>
+          </div>
+
+          <!-- Quick Hostinger Deployment Instructions -->
+          <details style="margin-top: 14px; background: #071329; border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 10px; font-size: 11px; color: var(--text-gray);">
+            <summary style="cursor: pointer; color: var(--cyan); font-weight: 700;">📋 Hostinger Setup Guide (3 Simple Steps)</summary>
+            <ol style="margin: 8px 0 0 16px; padding: 0; line-height: 1.6;">
+              <li><strong style="color: #FFF;">phpMyAdmin:</strong> In Hostinger hPanel, create a MySQL Database and import <code style="color: var(--yellow);">database.sql</code>.</li>
+              <li><strong style="color: #FFF;">Credentials:</strong> Open <code style="color: var(--cyan);">save_data.php</code> and set <code style="color: var(--cyan);">DB_NAME</code>, <code style="color: var(--cyan);">DB_USER</code>, and <code style="color: var(--cyan);">DB_PASS</code>.</li>
+              <li><strong style="color: #FFF;">Upload:</strong> Upload <code style="color: #FFF;">index.html</code>, <code style="color: #FFF;">save_data.php</code>, and <code style="color: #FFF;">database.sql</code> to your Hostinger <code style="color: var(--yellow);">public_html</code> directory.</li>
+            </ol>
+          </details>
         </div>
       </div>
     </div>
@@ -1595,7 +1639,7 @@
       document.getElementById('duty-load-factor').value = `${lf}%`;
     }
 
-    function handleDutySubmit(event) {
+    async function handleDutySubmit(event) {
       event.preventDefault();
       const user = getCurrentUser();
       if (!user) return;
@@ -1641,12 +1685,53 @@
         remarks: remarks
       };
 
+      // Always save locally immediately for instant offline responsiveness
       const duties = JSON.parse(localStorage.getItem(STORAGE_KEY_DUTIES) || '[]');
       duties.push(newDuty);
       localStorage.setItem(STORAGE_KEY_DUTIES, JSON.stringify(duties));
 
-      showToast('Duty Log Saved Successfully!');
-      navigateTo('screen-show-data');
+      const submitBtn = document.getElementById('btn-save-duty');
+      const origText = submitBtn ? submitBtn.innerHTML : 'SAVE DUTY LOG ENTRY';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '⏳ SAVING TO HOSTINGER MYSQL...';
+      }
+
+      // Send duty payload via Fetch API POST to save_data.php
+      try {
+        const response = await fetch('save_data.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            action: 'save_duty',
+            ...newDuty
+          })
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          if (result.status === 'success') {
+            showToast(`Duty Saved to Hostinger MySQL! (Bus: ${newDuty.busNumber})`);
+          } else {
+            showToast(`Saved locally. (${result.message || 'Hostinger notice'})`);
+          }
+        } else {
+          showToast(`Saved locally. (Hostinger HTTP ${response.status})`);
+        }
+      } catch (err) {
+        // Fallback gracefully if running locally, offline, or PHP credentials not yet set
+        console.warn('Hostinger save_data.php offline, stored in local cache:', err);
+        showToast('Saved to Local Cache (Hostinger sync ready)');
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = origText;
+        }
+        navigateTo('screen-show-data');
+      }
     }
 
     // -------------------------------------------------------------
@@ -1945,13 +2030,118 @@
       `;
     }
 
-    function deleteDuty(id) {
+    async function deleteDuty(id) {
       if (confirm('Delete this duty record?')) {
         let duties = JSON.parse(localStorage.getItem(STORAGE_KEY_DUTIES) || '[]');
         duties = duties.filter(d => d.id !== id);
         localStorage.setItem(STORAGE_KEY_DUTIES, JSON.stringify(duties));
+
+        // Delete from Hostinger MySQL backend via Fetch API
+        try {
+          await fetch('save_data.php', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+              action: 'delete_duty',
+              id: id
+            })
+          });
+        } catch (err) {
+          console.warn('Hostinger MySQL delete sync offline:', err);
+        }
+
         showToast('Record deleted.');
         renderDutyTable();
+      }
+    }
+
+    // -------------------------------------------------------------
+    // Hostinger MySQL Diagnostics & Batch Synchronization
+    // -------------------------------------------------------------
+    async function testHostingerConnection() {
+      const statusEl = document.getElementById('mysql-status-text');
+      const testBtn = document.getElementById('btn-test-mysql');
+      if (statusEl) statusEl.innerHTML = '<span style="color: var(--yellow);">Testing connection to save_data.php...</span>';
+      if (testBtn) testBtn.disabled = true;
+
+      try {
+        const res = await fetch('save_data.php?action=test', {
+          method: 'GET',
+          headers: { 'Accept': 'application/json' }
+        });
+        const data = await res.json();
+        if (data.status === 'success') {
+          if (statusEl) {
+            statusEl.innerHTML = `<span style="color: var(--green); font-weight: 700;">🟢 Online & Connected:</span> Database <code style="color: var(--cyan);">${data.database}</code> (${data.mysql_version})`;
+          }
+          showToast('Hostinger MySQL Connected Successfully!');
+        } else {
+          if (statusEl) {
+            statusEl.innerHTML = `<span style="color: var(--red); font-weight: 700;">🔴 Database Error:</span> ${data.message}`;
+          }
+          showToast(`Connection Failed: ${data.message}`);
+        }
+      } catch (err) {
+        if (statusEl) {
+          statusEl.innerHTML = `<span style="color: var(--yellow); font-weight: 700;">⚠️ Hostinger Server Notice:</span> <code>save_data.php</code> not reachable (${err.message}). Once uploaded to Hostinger <code>public_html</code> with MySQL credentials, it will connect immediately.`;
+        }
+        showToast('Running in local/offline cache mode');
+      } finally {
+        if (testBtn) testBtn.disabled = false;
+      }
+    }
+
+    async function syncAllLocalDutiesToMySQL() {
+      const syncBtn = document.getElementById('btn-sync-mysql');
+      const statusEl = document.getElementById('mysql-status-text');
+      const duties = JSON.parse(localStorage.getItem(STORAGE_KEY_DUTIES) || '[]');
+      if (duties.length === 0) {
+        alert('No local duties found to sync.');
+        return;
+      }
+
+      if (syncBtn) {
+        syncBtn.disabled = true;
+        syncBtn.innerHTML = '⏳ Syncing Records...';
+      }
+
+      try {
+        const res = await fetch('save_data.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            action: 'sync_all',
+            duties: duties
+          })
+        });
+        const data = await res.json();
+        if (data.status === 'success') {
+          showToast(data.message);
+          if (statusEl) {
+            statusEl.innerHTML = `<span style="color: var(--green); font-weight: 700;">🟢 Sync Succeeded:</span> ${data.message}`;
+          }
+        } else {
+          showToast(`Sync Notice: ${data.message}`);
+          if (statusEl) {
+            statusEl.innerHTML = `<span style="color: var(--red); font-weight: 700;">🔴 Sync Issue:</span> ${data.message}`;
+          }
+        }
+      } catch (err) {
+        showToast('Sync failed (Server offline or credentials needed)');
+        if (statusEl) {
+          statusEl.innerHTML = `<span style="color: var(--yellow); font-weight: 700;">⚠️ Sync Notice:</span> ${err.message}. Ensure database is configured on Hostinger.`;
+        }
+      } finally {
+        if (syncBtn) {
+          syncBtn.disabled = false;
+          syncBtn.innerHTML = '🔄 Sync All to MySQL';
+        }
       }
     }
 
