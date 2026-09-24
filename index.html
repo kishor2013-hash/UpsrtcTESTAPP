@@ -535,7 +535,7 @@
   <div id="app-viewport">
 
     <!-- ======================================================== -->
-    <!-- 1. LOGIN SCREEN (Strict Initial Gateway)                 -->
+    <!-- 1. LOGIN SCREEN                                          -->
     <!-- ======================================================== -->
     <div id="screen-login" class="screen-view active">
       <div style="padding: 34px 20px 20px 20px; text-align: center;">
@@ -574,7 +574,7 @@
         </div>
 
         <div style="margin-top: 18px; text-align: center; font-size: 12px; color: var(--text-gray);">
-          New staff member? <a href="javascript:void(0)" onclick="navigateTo('screen-register')" style="color: var(--yellow); font-weight: 700; text-decoration: none;">Register New Account</a>
+          नया खाता बनाना है? <a href="javascript:void(0)" onclick="navigateTo('screen-register')" style="color: var(--yellow); font-weight: 700; text-decoration: none;">Register New Account</a>
         </div>
       </div>
 
@@ -600,7 +600,7 @@
         <button class="btn" onclick="navigateTo('screen-login')" style="width: 36px; height: 36px; background: #0B172E; color: var(--cyan); border: 1px solid var(--border-blue);">←</button>
         <div>
           <h2 style="color: var(--cyan); font-size: 16px; font-weight: 900;">STAFF REGISTRATION</h2>
-          <p style="color: var(--text-gray); font-size: 11px;">Official UPSRTC Account Setup</p>
+          <p style="color: var(--text-gray); font-size: 11px;">यह डेटा सीधे Hostinger MySQL सर्वर में सेव होगा</p>
         </div>
       </div>
 
@@ -616,7 +616,7 @@
           <div class="input-row">
             <div class="form-group">
               <label class="form-label">Date of Birth *</label>
-              <input type="date" id="reg-dob" class="form-input" required>
+              <input type="date" id="reg-dob" class="form-input" required value="1990-01-01">
             </div>
             <div class="form-group">
               <label class="form-label">Mobile Number *</label>
@@ -632,11 +632,11 @@
           <div class="input-row">
             <div class="form-group">
               <label class="form-label">Password *</label>
-              <input type="password" id="reg-pass" class="form-input" minlength="6" required>
+              <input type="password" id="reg-pass" class="form-input" minlength="4" required>
             </div>
             <div class="form-group">
               <label class="form-label">Confirm Password *</label>
-              <input type="password" id="reg-confirm-pass" class="form-input" minlength="6" required>
+              <input type="password" id="reg-confirm-pass" class="form-input" minlength="4" required>
             </div>
           </div>
 
@@ -663,7 +663,7 @@
             </div>
             <div class="form-group">
               <label class="form-label">Depot Code</label>
-              <input type="text" id="reg-depot-code" class="form-input" placeholder="SGD-01">
+              <input type="text" id="reg-depot-code" class="form-input" placeholder="SGD-01" value="SGD-01">
             </div>
           </div>
 
@@ -673,17 +673,16 @@
           </div>
 
           <button type="submit" class="btn" style="width: 100%; height: 48px; background: var(--cyan); color: #070D1E; font-size: 14px; margin-top: 10px;">
-            CREATE ACCOUNT
+            CREATE ACCOUNT ON SERVER
           </button>
         </form>
       </div>
     </div>
 
     <!-- ======================================================== -->
-    <!-- 3. MAIN DASHBOARD (Exact 2-Column UI Design)             -->
+    <!-- 3. MAIN DASHBOARD                                        -->
     <!-- ======================================================== -->
     <div id="screen-dashboard" class="screen-view">
-      <!-- Header: UPSRTC ROADWAYS + Live Clock -->
       <header class="upsrtc-header">
         <div class="header-logo-group">
           <div class="bus-logo-badge">
@@ -701,7 +700,6 @@
         </div>
       </header>
 
-      <!-- Profile Banner Card with Golden Bordered Avatar -->
       <section class="profile-banner">
         <div class="profile-info-group">
           <div class="avatar-frame" onclick="navigateTo('screen-profile')" title="Click to Change Photo">
@@ -728,15 +726,12 @@
         </div>
       </section>
 
-      <!-- Section Title -->
       <div class="deck-section-title">
         <div class="cyan-indicator-pill"></div>
         <h2>OPERATIONAL CONTROL DECK</h2>
       </div>
 
-      <!-- 2-Column Responsive Deck Grid -->
       <div class="deck-grid">
-        <!-- 1. FEED DUTY (Cyan) -->
         <div class="deck-card card-cyan" onclick="navigateTo('screen-feed-duty')">
           <div class="deck-card-top">
             <div class="deck-card-icon-box">
@@ -749,7 +744,6 @@
           <div class="deck-card-action-pill">Open Entry Form →</div>
         </div>
 
-        <!-- 2. SHOW DATA (Yellow) -->
         <div class="deck-card card-yellow" onclick="navigateTo('screen-show-data')">
           <div class="deck-card-top">
             <div class="deck-card-icon-box">
@@ -762,7 +756,6 @@
           <div class="deck-card-action-pill">View Month Logs →</div>
         </div>
 
-        <!-- 3. PAY SLIP (Blue) -->
         <div class="deck-card card-blue" onclick="openExternalPortal('paySlip')">
           <div class="deck-card-top">
             <div class="deck-card-icon-box">
@@ -775,7 +768,6 @@
           <div class="deck-card-action-pill">Launch Portal →</div>
         </div>
 
-        <!-- 4. PF PORTAL (Green) -->
         <div class="deck-card card-green" onclick="openExternalPortal('pf')">
           <div class="deck-card-top">
             <div class="deck-card-icon-box">
@@ -788,7 +780,6 @@
           <div class="deck-card-action-pill">EPFO Passbook →</div>
         </div>
 
-        <!-- 5. CHALLAN (Red) -->
         <div class="deck-card card-red" onclick="openExternalPortal('challan')">
           <div class="deck-card-top">
             <div class="deck-card-icon-box">
@@ -801,7 +792,6 @@
           <div class="deck-card-action-pill">Open Challan Portal →</div>
         </div>
 
-        <!-- 6. MANAV SAMPADA (Purple) -->
         <div class="deck-card card-purple" onclick="openExternalPortal('manav')">
           <div class="deck-card-top">
             <div class="deck-card-icon-box">
@@ -815,7 +805,6 @@
         </div>
       </div>
 
-      <!-- Footer Branding -->
       <footer class="footer-branding">
         <div class="footer-line-1">GROFASTO DIGITAL SOLUTIONS • SECURE CLOUD GATEWAY</div>
         <div class="footer-line-2">UP STATE ROAD TRANSPORT CORPORATION • OFFICIAL CREW LOG</div>
@@ -823,7 +812,7 @@
     </div>
 
     <!-- ======================================================== -->
-    <!-- 4. FEED DUTY SCREEN (Interactive Date Picker & Calcs)    -->
+    <!-- 4. FEED DUTY SCREEN                                      -->
     <!-- ======================================================== -->
     <div id="screen-feed-duty" class="screen-view">
       <div style="padding: 16px 20px; display: flex; align-items: center; gap: 12px;">
@@ -836,7 +825,6 @@
 
       <div style="margin: 0 16px; padding: 20px; background: #0B172E; border: 1.2px solid var(--border-blue); border-radius: var(--radius-lg);">
         <form id="feed-duty-form" onsubmit="handleDutySubmit(event)">
-          <!-- Date Picker with Calendar & Quick Buttons -->
           <div style="color: var(--cyan); font-size: 12px; font-weight: 800; margin-bottom: 8px;">1. DUTY DATE & SHIFT</div>
           <div class="input-row">
             <div class="form-group">
@@ -849,7 +837,6 @@
             </div>
           </div>
 
-          <!-- Quick Date Helpers -->
           <div style="display: flex; gap: 8px; margin-top: -6px; margin-bottom: 14px;">
             <button type="button" class="btn" onclick="setDutyDateToday()" style="background: rgba(0, 229, 255, 0.15); color: var(--cyan); border: 1px solid var(--cyan); padding: 4px 10px; font-size: 11px;">
               Today
@@ -974,13 +961,11 @@
         </button>
       </div>
 
-      <!-- Month Filter Bar -->
       <div style="margin: 0 16px 12px 16px; padding: 12px; background: #0B172E; border: 1px solid var(--border-blue); border-radius: var(--radius-md); display: flex; align-items: center; gap: 10px;">
         <label class="form-label" style="margin-bottom: 0; white-space: nowrap;">Select Month:</label>
         <input type="month" id="report-month-filter" class="form-input" style="padding: 6px 10px;" onchange="renderDutyTable()">
       </div>
 
-      <!-- KPI Summary Cards -->
       <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 0 16px 14px 16px;">
         <div style="background: #0B172E; border: 1px solid var(--cyan); border-radius: var(--radius-sm); padding: 8px; text-align: center;">
           <div style="font-size: 9.5px; color: var(--text-gray);">Duties</div>
@@ -1000,7 +985,6 @@
         </div>
       </div>
 
-      <!-- Table View -->
       <div style="margin: 0 16px; background: #0B172E; border: 1.2px solid var(--border-blue); border-radius: var(--radius-lg); overflow-x: auto;">
         <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 11px;">
           <thead>
@@ -1015,7 +999,6 @@
             </tr>
           </thead>
           <tbody id="duty-table-body">
-            <!-- Rendered by JS -->
           </tbody>
         </table>
       </div>
@@ -1096,7 +1079,6 @@
           </button>
         </form>
 
-        <!-- Change Password Box -->
         <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-subtle);">
           <div style="color: var(--red); font-size: 12px; font-weight: 800; margin-bottom: 12px;">CHANGE PASSWORD</div>
           <form id="change-pass-form" onsubmit="handlePasswordChange(event)">
@@ -1114,12 +1096,8 @@
 
   </div>
 
-  <!-- Toast Notification Message -->
   <div id="toast-msg">Notification</div>
 
-  <!-- ======================================================== -->
-  <!-- JAVASCRIPT: ENTIRE APP LOGIC, STATE, STORAGE & CALCS     -->
-  <!-- ======================================================== -->
   <script>
     // -------------------------------------------------------------
     // App State & Pre-seeded Local Storage
@@ -1136,7 +1114,6 @@
       manav: 'https://ehrms.upsdc.gov.in/'
     };
 
-    // Prepopulate sample user & records if empty
     function initializeStorage() {
       if (!localStorage.getItem(STORAGE_KEY_USERS)) {
         const defaultUsers = [
@@ -1261,7 +1238,7 @@
     setInterval(updateLiveClock, 1000);
 
     // -------------------------------------------------------------
-    // Authentication Operations
+    // Authentication Operations (Server Connected)
     // -------------------------------------------------------------
     function getCurrentUser() {
       const u = localStorage.getItem(STORAGE_KEY_USER);
@@ -1282,14 +1259,36 @@
       showToast('Credentials filled. Click Login!');
     }
 
-    function handleLoginSubmit(event) {
+    async function handleLoginSubmit(event) {
       event.preventDefault();
       const identifier = document.getElementById('login-identifier').value.trim();
       const password = document.getElementById('login-password').value.trim();
 
+      showToast('लॉगिन चेक हो रहा है...');
+
+      // 1. सर्वर डेटाबेस से लॉगिन चेक करें
+      try {
+        const response = await fetch('save_data.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'login_user', identifier: identifier, password: password })
+        });
+        const result = await response.json();
+
+        if (result.status === 'success') {
+          setCurrentUser(result.user);
+          showToast(`सर्वर लॉगिन सफल! स्वागत है ${result.user.fullName}`);
+          navigateTo('screen-dashboard');
+          return;
+        }
+      } catch (err) {
+        console.warn('सर्वर ऑफलाइन/एरर, लोकल चेक हो रहा है');
+      }
+
+      // 2. ऑफलाइन/लोकल बैकअप लॉगिन
       const users = JSON.parse(localStorage.getItem(STORAGE_KEY_USERS) || '[]');
       const user = users.find(u => 
-        (u.employeeId.equalsIgnoreCase(identifier) || 
+        (u.employeeId.toLowerCase().replace(/\s+/g, '') === identifier.toLowerCase().replace(/\s+/g, '') || 
          u.email.toLowerCase() === identifier.toLowerCase() || 
          u.mobile === identifier) && 
         u.password === password
@@ -1297,19 +1296,14 @@
 
       if (user) {
         setCurrentUser(user);
-        showToast(`Welcome back, ${user.fullName}!`);
+        showToast(`स्वागत है, ${user.fullName}! (लोकल मोड)`);
         navigateTo('screen-dashboard');
       } else {
-        alert('Invalid credentials! Please check your Employee ID / Password.');
+        alert('गलत आईडी या पासवर्ड!');
       }
     }
 
-    String.prototype.equalsIgnoreCase = function (other) {
-      return this.toLowerCase().replace(/\s+/g, '') === String(other).toLowerCase().replace(/\s+/g, '');
-    };
-
     function handleGoogleSignIn() {
-      // Direct Google simulation for instant client side access
       const users = JSON.parse(localStorage.getItem(STORAGE_KEY_USERS) || '[]');
       const user = users[0];
       setCurrentUser(user);
@@ -1325,7 +1319,7 @@
       }
     }
 
-    function handleRegisterSubmit(event) {
+    async function handleRegisterSubmit(event) {
       event.preventDefault();
       const name = document.getElementById('reg-name').value.trim();
       const dob = document.getElementById('reg-dob').value;
@@ -1340,13 +1334,7 @@
       const designation = document.getElementById('reg-designation').value.trim();
 
       if (pass !== confirmPass) {
-        alert('Passwords do not match!');
-        return;
-      }
-
-      const users = JSON.parse(localStorage.getItem(STORAGE_KEY_USERS) || '[]');
-      if (users.some(u => u.employeeId.equalsIgnoreCase(empId))) {
-        alert(`Employee ID ${empId} is already registered!`);
+        alert('दोनों पासवर्ड मेल नहीं खाते!');
         return;
       }
 
@@ -1365,11 +1353,31 @@
         photoUrl: ''
       };
 
+      // लोकल कैश में सेव
+      const users = JSON.parse(localStorage.getItem(STORAGE_KEY_USERS) || '[]');
       users.push(newUser);
       localStorage.setItem(STORAGE_KEY_USERS, JSON.stringify(users));
       setCurrentUser(newUser);
 
-      showToast('Registration successful!');
+      showToast('सर्वर पर खाता सुरक्षित किया जा रहा है...');
+
+      // Hostinger MySQL सर्वर पर सेव करें
+      try {
+        const response = await fetch('save_data.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'register_user', ...newUser })
+        });
+        const result = await response.json();
+        if (result.status === 'success') {
+          showToast('यूज़र Hostinger MySQL में सेव हो गया!');
+        } else {
+          showToast('लोकल सेव हुआ, सर्वर एरर: ' + result.message);
+        }
+      } catch (err) {
+        showToast('सर्वर कनेक्ट नहीं हुआ, लोकल सेव किया गया');
+      }
+
       navigateTo('screen-dashboard');
     }
 
@@ -1440,58 +1448,67 @@
       document.getElementById('duty-load-factor').value = `${lf}%`;
     }
 
-    function handleDutySubmit(event) {
+    // -------------------------------------------------------------
+    // Duty Submit (Hostinger Server + Local Cache)
+    // -------------------------------------------------------------
+    async function handleDutySubmit(event) {
       event.preventDefault();
       const user = getCurrentUser();
       if (!user) return;
-
-      const date = document.getElementById('duty-date').value;
-      const dutyNum = document.getElementById('duty-num').value.trim();
-      const shift = document.getElementById('duty-shift').value;
-      const bus = document.getElementById('duty-bus').value.trim();
-      const routeFrom = document.getElementById('duty-from').value.trim();
-      const routeTo = document.getElementById('duty-to').value.trim();
-      const depTime = document.getElementById('duty-dep-time').value;
-      const arrTime = document.getElementById('duty-arr-time').value;
-      const openKm = parseFloat(document.getElementById('duty-open-km').value) || 0;
-      const closeKm = parseFloat(document.getElementById('duty-close-km').value) || 0;
-      const totalKm = parseFloat(document.getElementById('duty-total-km').value) || (closeKm - openKm);
-      const passengers = parseInt(document.getElementById('duty-passengers').value) || 0;
-      const seats = parseInt(document.getElementById('duty-seats').value) || 52;
-      const lf = seats > 0 ? parseFloat(((passengers / seats) * 100).toFixed(1)) : 0;
-      const income = parseFloat(document.getElementById('duty-income').value) || 0;
-      const expenses = parseFloat(document.getElementById('duty-expenses').value) || 0;
-      const remarks = document.getElementById('duty-remarks').value.trim();
 
       const newDuty = {
         id: 'duty_' + Date.now(),
         userId: user.id,
         employeeId: user.employeeId,
-        dutyDate: date,
-        dutyNumber: dutyNum,
-        shift: shift,
-        busNumber: bus,
-        routeFrom: routeFrom,
-        routeTo: routeTo,
-        departureTime: depTime,
-        arrivalTime: arrTime,
-        openingKm: openKm,
-        closingKm: closeKm,
-        totalKm: totalKm,
-        passengerCount: passengers,
-        totalSeats: seats,
-        loadFactor: lf,
-        income: income,
-        expenses: expenses,
-        remarks: remarks
+        dutyDate: document.getElementById('duty-date').value,
+        dutyNumber: document.getElementById('duty-num').value.trim(),
+        shift: document.getElementById('duty-shift').value,
+        busNumber: document.getElementById('duty-bus').value.trim(),
+        routeFrom: document.getElementById('duty-from').value.trim(),
+        routeTo: document.getElementById('duty-to').value.trim(),
+        departureTime: document.getElementById('duty-dep-time').value,
+        arrivalTime: document.getElementById('duty-arr-time').value,
+        openingKm: parseFloat(document.getElementById('duty-open-km').value) || 0,
+        closingKm: parseFloat(document.getElementById('duty-close-km').value) || 0,
+        totalKm: parseFloat(document.getElementById('duty-total-km').value) || 0,
+        passengerCount: parseInt(document.getElementById('duty-passengers').value) || 0,
+        totalSeats: parseInt(document.getElementById('duty-seats').value) || 52,
+        loadFactor: parseFloat(document.getElementById('duty-load-factor').value) || 0,
+        income: parseFloat(document.getElementById('duty-income').value) || 0,
+        expenses: parseFloat(document.getElementById('duty-expenses').value) || 0,
+        remarks: document.getElementById('duty-remarks').value.trim()
       };
 
+      // 1. तुरंत लोकल स्टोरेज में जोड़ें
       const duties = JSON.parse(localStorage.getItem(STORAGE_KEY_DUTIES) || '[]');
-      duties.push(newDuty);
+      duties.unshift(newDuty);
       localStorage.setItem(STORAGE_KEY_DUTIES, JSON.stringify(duties));
 
-      showToast('Duty Log Saved Successfully!');
-      navigateTo('screen-show-data');
+      showToast('ड्यूटी सर्वर पर भेजी जा रही है...');
+
+      // 2. सीधे Hostinger MySQL सर्वर पर POST करें
+      try {
+        const response = await fetch('save_data.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({ action: 'save_duty', ...newDuty })
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          if (result.status === 'success') {
+            showToast(`ड्यूटी Hostinger MySQL सर्वर पर सेव हो गई! (बस: ${newDuty.busNumber})`);
+          } else {
+            showToast(`लोकल सेव हुआ: ${result.message}`);
+          }
+        } else {
+          showToast(`लोकल सेव हुआ (Hostinger कोड: ${response.status})`);
+        }
+      } catch (err) {
+        showToast('लोकल सुरक्षित, सर्वर कनेक्शन नहीं बना');
+      } finally {
+        navigateTo('screen-show-data');
+      }
     }
 
     // -------------------------------------------------------------
@@ -1509,7 +1526,6 @@
         (!filterMonth || d.dutyDate.startsWith(filterMonth))
       ).sort((a, b) => b.dutyDate.localeCompare(a.dutyDate));
 
-      // Calculate Metrics
       let totalKm = 0;
       let totalIncome = 0;
       let sumLf = 0;
@@ -1587,9 +1603,6 @@
       URL.revokeObjectURL(url);
     }
 
-    // -------------------------------------------------------------
-    // Printable Official PDF Crew Sheet
-    // -------------------------------------------------------------
     function printDutySheet() {
       const user = getCurrentUser();
       const filterMonth = document.getElementById('report-month-filter').value;
