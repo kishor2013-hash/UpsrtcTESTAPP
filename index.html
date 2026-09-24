@@ -6,6 +6,15 @@
 <title>UPSRTC Duty Portal V4.0 - Roadways Digital Gateway</title>
 <meta name="description" content="UPSRTC Roadways Digital Duty Portal V4.0. Drivers and Conductors Duty Management System.">
 
+<!-- PWA & Mobile App Setup -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#070D1E">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="UPSRTC Duty">
+<link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1048/1048314.png">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@600;800&display=swap" rel="stylesheet">
@@ -789,6 +798,14 @@ button,input,select,textarea{
         SECURE LOGIN →
       </button>
     </form>
+
+    <!-- PWA Install Button -->
+    <div style="margin-top:14px;text-align:center">
+      <button type="button" id="pwa-install-btn" class="btn" onclick="triggerPwaInstall()" style="width:100%;height:44px;background:#0F254B;color:var(--cyan);border:1.2px solid var(--cyan);font-size:13px;font-weight:800;gap:8px">
+        📲 INSTALL MOBILE APP
+      </button>
+    </div>
+
     <div style="margin-top:18px;text-align:center;font-size:12px;color:var(--text-gray)">
       नया खाता बनाना है?
       <a href="javascript:void(0)" onclick="navigateTo('screen-register')" style="color:var(--yellow);font-weight:700;text-decoration:none">
@@ -929,7 +946,7 @@ button,input,select,textarea{
       </div>
       <div class="icon-action-btn btn-logout" onclick="confirmLogout()" title="Logout">
         <svg style="width:20px;height:20px" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2z"/>
+          <path d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
         </svg>
       </div>
     </div>
@@ -1035,10 +1052,10 @@ button,input,select,textarea{
 
   <footer class="footer-branding">
     <div class="footer-line-1">
-      |GROFASTO| DIGITAL SOLUTIONS • 9457690255
+      GROFASTO DIGITAL SOLUTIONS • 9457690255
     </div>
     <div class="footer-line-2">
-      www.grofasto.com
+      UP STATE ROAD TRANSPORT CORPORATION • OFFICIAL CREW LOG
     </div>
   </footer>
 </div>
@@ -1413,6 +1430,29 @@ const defaultPortalUrls={
   manav:'https://ehrms.upsdc.gov.in/'
 };
 
+// PWA Install Prompt Handler
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  const btn = document.getElementById('pwa-install-btn');
+  if(btn) btn.style.display = 'inline-flex';
+});
+
+function triggerPwaInstall(){
+  if(deferredPrompt){
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === 'accepted') {
+        showToast('App installed successfully!');
+      }
+      deferredPrompt = null;
+    });
+  } else {
+    alert('ऐप को इंस्टॉल करने के लिए अपने मोबाइल ब्राउज़र में ऊपर दाईं ओर 3 डॉट्स (⋮) पर क्लिक करें और "Add to Home screen" या "Install app" चुनें।');
+  }
+}
+
 function initializeStorage(){
   if(!localStorage.getItem(STORAGE_KEY_DUTIES))
     localStorage.setItem(STORAGE_KEY_DUTIES,'[]');
@@ -1437,7 +1477,6 @@ function navigateTo(screenId){
       const now=new Date();
       m.value=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
     }
-    // सर्वर से सीधे ताज़ा डेटा लाएँ
     syncAndRenderDuties();
   }
 
@@ -1473,9 +1512,6 @@ function setCurrentUser(user){
   else localStorage.removeItem(STORAGE_KEY_USER);
 }
 
-// -------------------------------------------------------------
-// सर्वर से यूज़र की पूरी ड्यूटियाँ सिंक करने का मुख्य फ़ंक्शन
-// -------------------------------------------------------------
 async function syncUserDutiesFromServer(empId){
   if(!empId) return [];
   try{
@@ -1486,7 +1522,6 @@ async function syncUserDutiesFromServer(empId){
     });
     const result=await response.json();
     if(result.status==='success' && Array.isArray(result.duties)){
-      // सर्वर डेटा को लोकल ऐप फ़ॉर्मेट में मैप करें
       const normalizedDuties=result.duties.map(d=>({
         id: d.duty_unique_id || ('duty_'+d.id),
         employeeId: d.employee_id,
@@ -1499,7 +1534,6 @@ async function syncUserDutiesFromServer(empId){
         income: parseFloat(d.income) || 0,
         remarks: d.remarks || ''
       }));
-      // मोबाइल लोकल स्टोरेज में सुरक्षित रखें
       localStorage.setItem(STORAGE_KEY_DUTIES, JSON.stringify(normalizedDuties));
       return normalizedDuties;
     }
@@ -1538,10 +1572,7 @@ async function handleLoginSubmit(event){
     if(result.status==='success'){
       setCurrentUser(result.user);
       showToast('लॉगिन सफल! डेटा डाउनलोड हो रहा है...');
-      
-      // मोबाइल में तुरंत सर्वर से पुरानी सारी ड्यूटियाँ फेच करें
       await syncUserDutiesFromServer(result.user.employeeId);
-      
       navigateTo('screen-dashboard');
       return;
     }else{
@@ -1870,7 +1901,6 @@ async function deleteDuty(id){
   if(!confirm('क्या आप सचमुच इस ड्यूटी रिकॉर्ड को सर्वर और ऐप दोनों से हटाना चाहते हैं?')) return;
   const user=getCurrentUser();
 
-  // 1. सर्वर से हटाएँ
   try{
     await fetch('save_data.php',{
       method:'POST',
@@ -1879,7 +1909,6 @@ async function deleteDuty(id){
     });
   }catch(e){}
 
-  // 2. लोकल से हटाएँ
   let duties=JSON.parse(localStorage.getItem(STORAGE_KEY_DUTIES)||'[]');
   duties=duties.filter(d=>d.id!==id);
   localStorage.setItem(STORAGE_KEY_DUTIES, JSON.stringify(duties));
@@ -2094,7 +2123,6 @@ window.addEventListener('DOMContentLoaded', async ()=>{
   updateLiveClock();
   const user=getCurrentUser();
   if(user){
-    // अगर पहले से लॉगिन है तो बैकग्राउंड में डेटा सर्वर से सिंक करें
     syncUserDutiesFromServer(user.employeeId);
     navigateTo('screen-dashboard');
   }else{
