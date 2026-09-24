@@ -1,21 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>UPSRTC Duty Portal V4.0 - Roadways Digital Gateway</title>
-  <meta name="description" content="UPSRTC Roadways Digital Duty Portal V4.0 for Drivers and Conductors. Manage duty logs, monthly reports, PDF export, and official portal access.">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23070D1E'/><circle cx='50' cy='50' r='38' fill='none' stroke='%2300E5FF' stroke-width='4'/><path d='M30,35 L70,35 C74,35 76,38 76,42 L76,68 C76,71 74,73 70,73 L30,73 C26,73 24,71 24,68 L24,42 C24,38 26,35 30,35 Z' fill='%2300E5FF'/><rect x='28' y='42' width='44' height='12' rx='2' fill='%23070D1E'/><circle cx='34' cy='62' r='3.5' fill='%23FFFFFF'/><circle cx='66' cy='62' r='3.5' fill='%23FFFFFF'/></svg>">
+  <meta name="description" content="UPSRTC Roadways Digital Duty Portal V4.0. Drivers and Conductors Duty Management System.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@600;800&display=swap" rel="stylesheet">
+
+  <!-- React & Recharts for Performance Charts -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/prop-types/prop-types.min.js"></script>
+  <script src="https://unpkg.com/recharts/umd/Recharts.min.js"></script>
+
   <style>
+    /* =====================================================================
+       1. MATERIAL DESIGN 3 & UPSRTC CYBER-NAVY THEME STYLES
+       ===================================================================== */
     :root {
       --bg-dark: #070D1E;
       --surface-card: #0B172E;
       --surface-card-alt: #091730;
       --border-blue: #1E3A70;
       --border-subtle: #14284E;
+      
       --cyan: #00E5FF;
       --cyan-glow: rgba(0, 229, 255, 0.25);
       --yellow: #FFD600;
@@ -28,12 +38,15 @@
       --red-glow: rgba(255, 61, 113, 0.2);
       --purple: #B388FF;
       --purple-glow: rgba(179, 136, 255, 0.2);
+      
       --text-white: #FFFFFF;
       --text-gray: #8F9CAE;
       --text-muted: #566882;
+      
       --radius-sm: 8px;
       --radius-md: 14px;
       --radius-lg: 18px;
+      --radius-full: 9999px;
     }
 
     * {
@@ -54,7 +67,7 @@
       overflow-x: hidden;
     }
 
-    #app-container {
+    #app-viewport {
       width: 100%;
       max-width: 520px;
       min-height: 100vh;
@@ -63,19 +76,19 @@
       flex-direction: column;
       position: relative;
       padding-bottom: 24px;
-      box-shadow: 0 0 50px rgba(0,0,0,0.8);
+      box-shadow: 0 0 50px rgba(0,0,0,0.85);
     }
 
     @media (min-width: 900px) {
-      #app-container {
-        max-width: 640px;
+      #app-viewport {
+        max-width: 620px;
         border-left: 1px solid #101F3B;
         border-right: 1px solid #101F3B;
       }
     }
 
-    /* Common Buttons & Inputs */
-    input, select, textarea {
+    /* Common Button & Form Controls */
+    button, input, select, textarea {
       font-family: inherit;
     }
 
@@ -84,7 +97,7 @@
       align-items: center;
       justify-content: center;
       font-weight: 700;
-      border-radius: 9999px;
+      border-radius: var(--radius-full);
       border: none;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -96,12 +109,12 @@
       transform: scale(0.97);
     }
 
-    /* Header Component */
+    /* App Header */
     .upsrtc-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 12px 16px 8px 16px;
+      padding: 14px 16px 8px 16px;
       width: 100%;
     }
 
@@ -112,9 +125,9 @@
     }
 
     .bus-logo-badge {
-      width: 46px;
-      height: 46px;
-      border-radius: 12px;
+      width: 48px;
+      height: 48px;
+      border-radius: 13px;
       background: radial-gradient(circle at center, rgba(0, 229, 255, 0.45) 0%, #072138 100%);
       border: 1.5px solid var(--cyan);
       display: flex;
@@ -124,8 +137,8 @@
     }
 
     .bus-logo-badge svg {
-      width: 26px;
-      height: 26px;
+      width: 28px;
+      height: 28px;
       fill: var(--cyan);
     }
 
@@ -170,10 +183,10 @@
       margin-top: 2px;
     }
 
-    /* Profile Banner Component */
+    /* Profile Banner */
     .profile-banner {
       margin: 8px 14px;
-      padding: 12px;
+      padding: 12px 14px;
       border-radius: var(--radius-lg);
       background: linear-gradient(135deg, #091730 0%, #0A1C3B 100%);
       border: 1.2px solid var(--border-blue);
@@ -192,9 +205,9 @@
     }
 
     .avatar-frame {
-      width: 50px;
-      height: 50px;
-      min-width: 50px;
+      width: 52px;
+      height: 52px;
+      min-width: 52px;
       border-radius: 50%;
       background: #13233E;
       border: 2px solid var(--yellow);
@@ -213,8 +226,8 @@
     }
 
     .avatar-frame svg {
-      width: 30px;
-      height: 30px;
+      width: 32px;
+      height: 32px;
       fill: var(--yellow);
     }
 
@@ -227,8 +240,8 @@
     .profile-line-1 {
       display: flex;
       align-items: center;
-      gap: 4px;
-      font-size: 14px;
+      gap: 5px;
+      font-size: 14.5px;
       font-weight: 700;
       color: var(--text-white);
       white-space: nowrap;
@@ -289,16 +302,6 @@
       color: var(--red);
     }
 
-    .icon-action-btn.btn-admin {
-      background: #0F254B;
-      border-color: var(--cyan);
-      color: var(--cyan);
-    }
-
-    .icon-action-btn:hover {
-      transform: translateY(-1px);
-    }
-
     /* Section Header */
     .deck-section-title {
       display: flex;
@@ -317,12 +320,12 @@
 
     .deck-section-title h2 {
       color: var(--text-white);
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 900;
       letter-spacing: 0.8px;
     }
 
-    /* 2-Column Responsive Deck Grid */
+    /* 2-Column Deck Grid */
     .deck-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -373,7 +376,7 @@
     }
 
     .deck-card-badge {
-      border-radius: 9999px;
+      border-radius: var(--radius-full);
       background: #091730;
       border: 1px solid var(--card-theme);
       color: var(--card-theme);
@@ -401,7 +404,7 @@
     }
 
     .deck-card-action-pill {
-      border-radius: 9999px;
+      border-radius: var(--radius-full);
       background: var(--card-glow);
       border: 1px solid var(--card-theme);
       color: var(--card-theme);
@@ -420,31 +423,13 @@
       color: #070D1E;
     }
 
-    /* Individual Card Color Themes */
-    .card-cyan {
-      --card-theme: var(--cyan);
-      --card-glow: var(--cyan-glow);
-    }
-    .card-yellow {
-      --card-theme: var(--yellow);
-      --card-glow: var(--yellow-glow);
-    }
-    .card-blue {
-      --card-theme: var(--blue);
-      --card-glow: var(--blue-glow);
-    }
-    .card-green {
-      --card-theme: var(--green);
-      --card-glow: var(--green-glow);
-    }
-    .card-red {
-      --card-theme: var(--red);
-      --card-glow: var(--red-glow);
-    }
-    .card-purple {
-      --card-theme: var(--purple);
-      --card-glow: var(--purple-glow);
-    }
+    /* Individual Color Themes */
+    .card-cyan { --card-theme: var(--cyan); --card-glow: var(--cyan-glow); }
+    .card-yellow { --card-theme: var(--yellow); --card-glow: var(--yellow-glow); }
+    .card-blue { --card-theme: var(--blue); --card-glow: var(--blue-glow); }
+    .card-green { --card-theme: var(--green); --card-glow: var(--green-glow); }
+    .card-red { --card-theme: var(--red); --card-glow: var(--red-glow); }
+    .card-purple { --card-theme: var(--purple); --card-glow: var(--purple-glow); }
 
     /* Footer Branding */
     .footer-branding {
@@ -467,7 +452,7 @@
       letter-spacing: 0.3px;
     }
 
-    /* Screens / Views Management */
+    /* View Navigation Visibility */
     .screen-view {
       display: none;
       flex-direction: column;
@@ -478,7 +463,7 @@
       display: flex;
     }
 
-    /* Forms & Modal Inputs */
+    /* Form Fields */
     .form-group {
       display: flex;
       flex-direction: column;
@@ -514,93 +499,20 @@
       gap: 10px;
     }
 
-    /* Modal Sheet Styling */
-    .modal-backdrop {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(4, 9, 21, 0.85);
-      backdrop-filter: blur(4px);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-    }
-
-    .modal-backdrop.open {
-      display: flex;
-    }
-
-    .modal-box {
-      background: #0B172E;
-      border: 1.5px solid var(--border-blue);
-      border-radius: var(--radius-lg);
-      width: 100%;
-      max-width: 480px;
-      max-height: 90vh;
-      overflow-y: auto;
-      padding: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.9);
-      position: relative;
-    }
-
-    .modal-title {
-      font-size: 17px;
-      font-weight: 800;
-      color: var(--cyan);
-      margin-bottom: 14px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .close-modal-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-gray);
-      font-size: 20px;
-      cursor: pointer;
-    }
-
-    /* Print Stylesheet for Official PDF Reports */
+    /* Print Stylesheet for Reports */
     @media print {
-      body {
-        background: #FFFFFF !important;
-        color: #000000 !important;
-      }
-      #app-container {
-        max-width: 100% !important;
-        box-shadow: none !important;
-        border: none !important;
-        padding: 0 !important;
-      }
-      .no-print {
-        display: none !important;
-      }
-      .print-only {
-        display: block !important;
-      }
-      table {
-        width: 100% !important;
-        border-collapse: collapse !important;
-        color: #000000 !important;
-      }
-      th, td {
-        border: 1px solid #333333 !important;
-        padding: 6px 8px !important;
-        font-size: 11px !important;
-      }
-      th {
-        background-color: #EEEEEE !important;
-        font-weight: bold !important;
-      }
+      body { background: #FFFFFF !important; color: #000000 !important; }
+      #app-viewport { max-width: 100% !important; box-shadow: none !important; border: none !important; }
+      .no-print { display: none !important; }
+      .print-only { display: block !important; }
+      table { width: 100% !important; border-collapse: collapse !important; color: #000 !important; }
+      th, td { border: 1px solid #333 !important; padding: 6px 8px !important; font-size: 11px !important; }
+      th { background-color: #EEE !important; }
     }
 
-    .print-only {
-      display: none;
-    }
+    .print-only { display: none; }
 
-    /* Toast Notification */
+    /* Toast Notifications */
     #toast-msg {
       position: fixed;
       bottom: 24px;
@@ -610,7 +522,7 @@
       border: 1px solid var(--cyan);
       color: #FFFFFF;
       padding: 12px 20px;
-      border-radius: 9999px;
+      border-radius: var(--radius-full);
       font-size: 13px;
       font-weight: 600;
       box-shadow: 0 4px 20px rgba(0,0,0,0.7);
@@ -626,33 +538,33 @@
 </head>
 <body>
 
-  <div id="app-container">
+  <div id="app-viewport">
 
-    <!-- ========================================== -->
-    <!-- 1. LOGIN SCREEN (Strict Initial Gateway)  -->
-    <!-- ========================================== -->
+    <!-- ======================================================== -->
+    <!-- 1. LOGIN SCREEN (Strict Initial Gateway)                 -->
+    <!-- ======================================================== -->
     <div id="screen-login" class="screen-view active">
-      <div style="padding: 32px 20px 20px 20px; text-align: center;">
+      <div style="padding: 34px 20px 20px 20px; text-align: center;">
         <div class="bus-logo-badge" style="margin: 0 auto 16px auto; width: 64px; height: 64px; border-radius: 18px;">
           <svg viewBox="0 0 24 24" style="width: 36px; height: 36px;"><path d="M4 16c0 .88.39 1.67 1 2.22V20c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h8v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1.78c.61-.55 1-1.34 1-2.22V6c0-3.5-3.58-4-8-4s-8 .5-8 4v10zm3.5 1c-.83 0-1.5-.67-1.5-1.5S6.67 14 7.5 14s1.5.67 1.5 1.5S8.33 17 7.5 17zm9 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm1.5-6H6V6h12v5z"/></svg>
         </div>
         <h1 style="color: var(--yellow); font-size: 24px; font-weight: 900; letter-spacing: 0.5px;">UPSRTC ROADWAYS</h1>
         <p style="color: var(--cyan); font-size: 13px; font-weight: 700; letter-spacing: 1px; margin-top: 4px;">DIGITAL DUTY PORTAL V4.0</p>
-        <p style="color: var(--text-gray); font-size: 12px; margin-top: 6px;">Secure Portal for Drivers & Conductors</p>
+        <p style="color: var(--text-gray); font-size: 12px; margin-top: 6px;">Official Gateway for Drivers & Conductors</p>
       </div>
 
-      <div style="margin: 10px 20px; padding: 22px; background: #0B172E; border: 1.2px solid var(--border-blue); border-radius: var(--radius-lg); box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
-        <h2 style="font-size: 16px; font-weight: 800; color: #FFFFFF; margin-bottom: 16px;">STAFF SIGN IN</h2>
+      <div style="margin: 8px 20px; padding: 22px; background: #0B172E; border: 1.2px solid var(--border-blue); border-radius: var(--radius-lg); box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
+        <h2 style="font-size: 15px; font-weight: 800; color: #FFFFFF; margin-bottom: 16px;">STAFF SECURE SIGN IN</h2>
 
         <form id="login-form" onsubmit="handleLoginSubmit(event)">
           <div class="form-group">
             <label class="form-label">Employee ID / Email / Mobile *</label>
-            <input type="text" id="login-identifier" class="form-input" placeholder="e.g. CND 1901 or driver@upsrtc.in" required value="CND 1901">
+            <input type="text" id="login-identifier" class="form-input" placeholder="e.g. CND 1901" required value="CND 1901">
           </div>
 
           <div class="form-group">
             <label class="form-label">Password *</label>
-            <input type="password" id="login-password" class="form-input" placeholder="Enter your password" required value="123456">
+            <input type="password" id="login-password" class="form-input" placeholder="Enter password" required value="123456">
           </div>
 
           <button type="submit" class="btn" style="width: 100%; height: 46px; background: var(--cyan); color: #070D1E; font-size: 14px; margin-top: 8px;">
@@ -660,20 +572,20 @@
           </button>
         </form>
 
-        <div style="margin-top: 18px; text-align: center;">
-          <button type="button" class="btn" onclick="handleGoogleSignIn()" style="width: 100%; height: 44px; background: #0F254B; color: #FFFFFF; border: 1px solid var(--border-blue); font-size: 13px; gap: 8px;">
-            <svg style="width: 18px; height: 18px;" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.4 9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"/><path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.8s.2-2.1.4-2.8L1.9 6.3C.7 8.7 0 10.3 0 12s.7 3.3 1.9 5.7l3.7-2.9z"/><path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2-6.4-4.8L1.9 16.4C3.7 20.1 7.5 23 12 23z"/></svg>
+        <div style="margin-top: 14px; text-align: center;">
+          <button type="button" class="btn" onclick="handleGoogleSignIn()" style="width: 100%; height: 42px; background: #0F254B; color: #FFFFFF; border: 1px solid var(--border-blue); font-size: 12.5px; gap: 8px;">
+            <svg style="width: 17px; height: 17px;" viewBox="0 0 24 24"><path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.4 9 5 12 5z"/><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"/><path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.8s.2-2.1.4-2.8L1.9 6.3C.7 8.7 0 10.3 0 12s.7 3.3 1.9 5.7l3.7-2.9z"/><path fill="#34A853" d="M12 23c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2-6.4-4.8L1.9 16.4C3.7 20.1 7.5 23 12 23z"/></svg>
             Sign in with Google
           </button>
         </div>
 
-        <div style="margin-top: 18px; text-align: center; font-size: 12.5px; color: var(--text-gray);">
+        <div style="margin-top: 18px; text-align: center; font-size: 12px; color: var(--text-gray);">
           New staff member? <a href="javascript:void(0)" onclick="navigateTo('screen-register')" style="color: var(--yellow); font-weight: 700; text-decoration: none;">Register New Account</a>
         </div>
       </div>
 
-      <!-- Quick Demo Credentials Box -->
-      <div style="margin: 12px 20px; padding: 14px; background: rgba(0, 229, 255, 0.05); border: 1px dashed var(--cyan); border-radius: var(--radius-md); font-size: 11.5px;">
+      <!-- Quick Demo Login Helpers -->
+      <div style="margin: 12px 20px; padding: 12px; background: rgba(0, 229, 255, 0.05); border: 1px dashed var(--cyan); border-radius: var(--radius-md); font-size: 11px;">
         <p style="color: var(--cyan); font-weight: 800; margin-bottom: 6px;">⚡ QUICK DEMO LOGINS:</p>
         <div style="display: flex; gap: 8px; flex-wrap: wrap;">
           <button type="button" onclick="quickFillLogin('CND 1901', '123456')" class="btn" style="background: #0D2B4D; color: var(--cyan); padding: 5px 10px; font-size: 11px; border: 1px solid var(--cyan);">
@@ -686,24 +598,22 @@
       </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- 2. REGISTER SCREEN (Full Validation)       -->
-    <!-- ========================================== -->
+    <!-- ======================================================== -->
+    <!-- 2. REGISTER SCREEN                                       -->
+    <!-- ======================================================== -->
     <div id="screen-register" class="screen-view">
       <div style="padding: 16px 20px; display: flex; align-items: center; gap: 12px;">
         <button class="btn" onclick="navigateTo('screen-login')" style="width: 36px; height: 36px; background: #0B172E; color: var(--cyan); border: 1px solid var(--border-blue);">←</button>
         <div>
           <h2 style="color: var(--cyan); font-size: 16px; font-weight: 900;">STAFF REGISTRATION</h2>
-          <p style="color: var(--text-gray); font-size: 11px;">Official UPSRTC Employee Account Setup</p>
+          <p style="color: var(--text-gray); font-size: 11px;">Official UPSRTC Account Setup</p>
         </div>
       </div>
 
       <div style="margin: 0 16px; padding: 20px; background: #0B172E; border: 1.2px solid var(--border-blue); border-radius: var(--radius-lg);">
         <form id="register-form" onsubmit="handleRegisterSubmit(event)">
-          <div style="color: var(--yellow); font-size: 12px; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 10px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 4px;">
-            1. PERSONAL INFORMATION
-          </div>
-
+          <div style="color: var(--yellow); font-size: 12px; font-weight: 800; margin-bottom: 8px;">1. PERSONAL DETAILS</div>
+          
           <div class="form-group">
             <label class="form-label">Full Name *</label>
             <input type="text" id="reg-name" class="form-input" placeholder="e.g. Surendra Sharma" required>
@@ -711,7 +621,7 @@
 
           <div class="input-row">
             <div class="form-group">
-              <label class="form-label">Date of Birth (Calendar) *</label>
+              <label class="form-label">Date of Birth *</label>
               <input type="date" id="reg-dob" class="form-input" required>
             </div>
             <div class="form-group">
@@ -721,13 +631,13 @@
           </div>
 
           <div class="form-group">
-            <label class="form-label">Official / Personal Email *</label>
+            <label class="form-label">Email *</label>
             <input type="email" id="reg-email" class="form-input" placeholder="surendra@upsrtc.in" required>
           </div>
 
           <div class="input-row">
             <div class="form-group">
-              <label class="form-label">Password (min 6) *</label>
+              <label class="form-label">Password *</label>
               <input type="password" id="reg-pass" class="form-input" minlength="6" required>
             </div>
             <div class="form-group">
@@ -736,13 +646,11 @@
             </div>
           </div>
 
-          <div style="color: var(--cyan); font-size: 12px; font-weight: 800; letter-spacing: 0.5px; margin: 14px 0 10px 0; border-bottom: 1px solid var(--border-subtle); padding-bottom: 4px;">
-            2. EMPLOYEE & DEPOT DETAILS
-          </div>
+          <div style="color: var(--cyan); font-size: 12px; font-weight: 800; margin: 12px 0 8px 0;">2. EMPLOYEE DETAILS</div>
 
           <div class="input-row">
             <div class="form-group">
-              <label class="form-label">Employee ID / CND No *</label>
+              <label class="form-label">Employee ID / CND *</label>
               <input type="text" id="reg-empid" class="form-input" placeholder="CND 1901" required>
             </div>
             <div class="form-group">
@@ -767,21 +675,20 @@
 
           <div class="form-group">
             <label class="form-label">Designation</label>
-            <input type="text" id="reg-designation" class="form-input" placeholder="Senior Conductor" value="Verified Conductor">
+            <input type="text" id="reg-designation" class="form-input" value="Verified Conductor">
           </div>
 
-          <button type="submit" class="btn" style="width: 100%; height: 48px; background: var(--cyan); color: #070D1E; font-size: 14px; margin-top: 14px;">
-            CREATE ACCOUNT & PROCEED
+          <button type="submit" class="btn" style="width: 100%; height: 48px; background: var(--cyan); color: #070D1E; font-size: 14px; margin-top: 10px;">
+            CREATE ACCOUNT
           </button>
         </form>
       </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- 3. MAIN DASHBOARD (Exact Image Design)     -->
-    <!-- ========================================== -->
+    <!-- ======================================================== -->
+    <!-- 3. MAIN DASHBOARD (Exact 2-Column UI Design)             -->
+    <!-- ======================================================== -->
     <div id="screen-dashboard" class="screen-view">
-
       <!-- Header: UPSRTC ROADWAYS + Live Clock -->
       <header class="upsrtc-header">
         <div class="header-logo-group">
@@ -795,8 +702,8 @@
         </div>
 
         <div class="header-clock-group">
-          <div class="live-clock-time" id="dash-live-time">09:17:15</div>
-          <div class="live-clock-date" id="dash-live-date">22 SEPT 2026</div>
+          <div class="live-clock-time" id="dash-live-time">00:00:00</div>
+          <div class="live-clock-date" id="dash-live-date">-- --- ----</div>
         </div>
       </header>
 
@@ -818,9 +725,6 @@
         </div>
 
         <div class="profile-actions-group">
-          <div id="dash-admin-btn" class="icon-action-btn btn-admin" style="display: none;" onclick="navigateTo('screen-admin')" title="Admin Console">
-            <svg style="width: 20px; height: 20px;" fill="currentColor" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
-          </div>
           <div class="icon-action-btn btn-profile" onclick="navigateTo('screen-profile')" title="Profile & Settings">
             <svg style="width: 20px; height: 20px;" fill="currentColor" viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>
           </div>
@@ -836,9 +740,8 @@
         <h2>OPERATIONAL CONTROL DECK</h2>
       </div>
 
-      <!-- 2-Column Deck Grid matching User Reference Photo -->
+      <!-- 2-Column Responsive Deck Grid -->
       <div class="deck-grid">
-
         <!-- 1. FEED DUTY (Cyan) -->
         <div class="deck-card card-cyan" onclick="navigateTo('screen-feed-duty')">
           <div class="deck-card-top">
@@ -913,10 +816,9 @@
             <div class="deck-card-badge">HR PORTAL</div>
           </div>
           <div class="deck-card-title">MANAV SAMPADA</div>
-          <div class="deck-card-desc">Employee HR/service portal for attendance, leave, service details and login.</div>
+          <div class="deck-card-desc">Employee HR/service portal for attendance and leave.</div>
           <div class="deck-card-action-pill">Open Manav Sampada →</div>
         </div>
-
       </div>
 
       <!-- Footer Branding -->
@@ -926,9 +828,9 @@
       </footer>
     </div>
 
-    <!-- ========================================== -->
-    <!-- 4. FEED DUTY SCREEN (With Interactive Calendar) -->
-    <!-- ========================================== -->
+    <!-- ======================================================== -->
+    <!-- 4. FEED DUTY SCREEN (Interactive Date Picker & Calcs)    -->
+    <!-- ======================================================== -->
     <div id="screen-feed-duty" class="screen-view">
       <div style="padding: 16px 20px; display: flex; align-items: center; gap: 12px;">
         <button class="btn" onclick="navigateTo('screen-dashboard')" style="width: 36px; height: 36px; background: #0B172E; color: var(--cyan); border: 1px solid var(--border-blue);">←</button>
@@ -940,7 +842,6 @@
 
       <div style="margin: 0 16px; padding: 20px; background: #0B172E; border: 1.2px solid var(--border-blue); border-radius: var(--radius-lg);">
         <form id="feed-duty-form" onsubmit="handleDutySubmit(event)">
-
           <!-- Date Picker with Calendar & Quick Buttons -->
           <div style="color: var(--cyan); font-size: 12px; font-weight: 800; margin-bottom: 8px;">1. DUTY DATE & SHIFT</div>
           <div class="input-row">
@@ -980,7 +881,7 @@
             </div>
           </div>
 
-          <div style="color: var(--yellow); font-size: 12px; font-weight: 800; margin: 14px 0 8px 0;">2. ROUTE & TIMINGS</div>
+          <div style="color: var(--yellow); font-size: 12px; font-weight: 800; margin: 12px 0 8px 0;">2. ROUTE & TIMINGS</div>
           <div class="input-row">
             <div class="form-group">
               <label class="form-label">Route From *</label>
@@ -1003,7 +904,7 @@
             </div>
           </div>
 
-          <div style="color: var(--green); font-size: 12px; font-weight: 800; margin: 14px 0 8px 0;">3. KILOMETERS & PASSENGERS</div>
+          <div style="color: var(--green); font-size: 12px; font-weight: 800; margin: 12px 0 8px 0;">3. KILOMETERS & PASSENGERS</div>
           <div class="input-row">
             <div class="form-group">
               <label class="form-label">Opening KM</label>
@@ -1037,7 +938,7 @@
             </div>
           </div>
 
-          <div style="color: var(--red); font-size: 12px; font-weight: 800; margin: 14px 0 8px 0;">4. REVENUE & INCOME</div>
+          <div style="color: var(--red); font-size: 12px; font-weight: 800; margin: 12px 0 8px 0;">4. REVENUE & INCOME</div>
           <div class="input-row">
             <div class="form-group">
               <label class="form-label">Total Income (₹) *</label>
@@ -1050,20 +951,20 @@
           </div>
 
           <div class="form-group">
-            <label class="form-label">Remarks / Waybill Note</label>
-            <input type="text" id="duty-remarks" class="form-input" placeholder="Smooth trip, on-time arrival">
+            <label class="form-label">Remarks</label>
+            <input type="text" id="duty-remarks" class="form-input" placeholder="On-time trip completion">
           </div>
 
-          <button type="submit" class="btn" style="width: 100%; height: 48px; background: var(--cyan); color: #070D1E; font-size: 14px; margin-top: 14px;">
+          <button type="submit" class="btn" style="width: 100%; height: 48px; background: var(--cyan); color: #070D1E; font-size: 14px; margin-top: 10px;">
             SAVE DUTY LOG ENTRY
           </button>
         </form>
       </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- 5. SHOW DATA SCREEN (Reports & PDF Engine) -->
-    <!-- ========================================== -->
+    <!-- ======================================================== -->
+    <!-- 5. SHOW DATA (Monthly Reports & PDF Export)               -->
+    <!-- ======================================================== -->
     <div id="screen-show-data" class="screen-view">
       <div style="padding: 16px 20px; display: flex; align-items: center; justify-content: space-between;">
         <div style="display: flex; align-items: center; gap: 12px;">
@@ -1074,7 +975,7 @@
           </div>
         </div>
 
-        <button class="btn" onclick="printOfficialDutySheet()" style="background: var(--yellow); color: #070D1E; padding: 7px 14px; font-size: 11px; gap: 5px;">
+        <button class="btn" onclick="printDutySheet()" style="background: var(--yellow); color: #070D1E; padding: 7px 14px; font-size: 11px; gap: 5px;">
           🖨️ PDF Print
         </button>
       </div>
@@ -1085,7 +986,7 @@
         <input type="month" id="report-month-filter" class="form-input" style="padding: 6px 10px;" onchange="renderDutyTable()">
       </div>
 
-      <!-- KPI Metric Tiles -->
+      <!-- KPI Summary Cards -->
       <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 0 16px 14px 16px;">
         <div style="background: #0B172E; border: 1px solid var(--cyan); border-radius: var(--radius-sm); padding: 8px; text-align: center;">
           <div style="font-size: 9.5px; color: var(--text-gray);">Duties</div>
@@ -1105,7 +1006,42 @@
         </div>
       </div>
 
-      <!-- Duty Table Container -->
+      <!-- Recharts Daily Income Trend Performance Card -->
+      <div class="income-trend-card" style="margin: 0 16px 14px 16px; padding: 14px; background: #0B172E; border: 1.2px solid var(--border-blue); border-radius: var(--radius-lg); box-shadow: 0 4px 20px rgba(0,0,0,0.35);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="width: 4px; height: 16px; border-radius: 2px; background: var(--cyan); box-shadow: 0 0 8px var(--cyan);"></div>
+            <h3 style="color: #FFFFFF; font-size: 13px; font-weight: 800; letter-spacing: 0.4px;">DAILY INCOME TREND (RECHARTS)</h3>
+          </div>
+          <div id="chart-peak-badge" style="background: #1A1807; border: 1px solid var(--yellow); border-radius: var(--radius-full); padding: 3px 9px; font-size: 10.5px; font-weight: 800; color: var(--yellow);">
+            Peak: ₹0
+          </div>
+        </div>
+        <p style="color: var(--text-gray); font-size: 10.5px; margin-bottom: 12px;">Interactive day-wise earnings curve, peak performance and average benchmark line.</p>
+
+        <!-- Recharts Responsive Container Mount Point -->
+        <div id="recharts-income-chart-container" style="width: 100%; min-height: 210px; position: relative;">
+          <!-- Dynamically populated by Recharts / SVG engine -->
+        </div>
+
+        <!-- Trend Performance Quick Metrics -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border-subtle); text-align: center;">
+          <div style="background: #091730; padding: 6px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+            <div style="font-size: 9px; color: var(--text-muted); text-transform: uppercase;">Daily Avg</div>
+            <div id="chart-avg-val" style="font-size: 12px; font-weight: 800; color: var(--cyan); margin-top: 2px;">₹0</div>
+          </div>
+          <div style="background: #091730; padding: 6px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+            <div style="font-size: 9px; color: var(--text-muted); text-transform: uppercase;">Best Duty Day</div>
+            <div id="chart-best-day" style="font-size: 12px; font-weight: 800; color: var(--yellow); margin-top: 2px;">-</div>
+          </div>
+          <div style="background: #091730; padding: 6px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+            <div style="font-size: 9px; color: var(--text-muted); text-transform: uppercase;">Active Days</div>
+            <div id="chart-active-days" style="font-size: 12px; font-weight: 800; color: var(--green); margin-top: 2px;">0 Days</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table View -->
       <div style="margin: 0 16px; background: #0B172E; border: 1.2px solid var(--border-blue); border-radius: var(--radius-lg); overflow-x: auto;">
         <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 11px;">
           <thead>
@@ -1116,11 +1052,11 @@
               <th style="padding: 10px 8px;">KM</th>
               <th style="padding: 10px 8px;">Income</th>
               <th style="padding: 10px 8px;">LF%</th>
-              <th style="padding: 10px 8px;">Act</th>
+              <th style="padding: 10px 8px;">Action</th>
             </tr>
           </thead>
           <tbody id="duty-table-body">
-            <!-- Injected via JS -->
+            <!-- Rendered by JS -->
           </tbody>
         </table>
       </div>
@@ -1135,9 +1071,9 @@
       </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- 6. PROFILE & PHOTO EDIT SCREEN             -->
-    <!-- ========================================== -->
+    <!-- ======================================================== -->
+    <!-- 6. PROFILE & PHOTO EDIT SCREEN                           -->
+    <!-- ======================================================== -->
     <div id="screen-profile" class="screen-view">
       <div style="padding: 16px 20px; display: flex; align-items: center; gap: 12px;">
         <button class="btn" onclick="navigateTo('screen-dashboard')" style="width: 36px; height: 36px; background: #0B172E; color: var(--cyan); border: 1px solid var(--border-blue);">←</button>
@@ -1148,7 +1084,6 @@
       </div>
 
       <div style="margin: 0 16px; padding: 20px; background: #0B172E; border: 1.2px solid var(--border-blue); border-radius: var(--radius-lg);">
-        <!-- Avatar Photo Upload Box -->
         <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 18px; padding-bottom: 16px; border-bottom: 1px solid var(--border-subtle);">
           <div class="avatar-frame" style="width: 72px; height: 72px; min-width: 72px;">
             <img id="profile-edit-avatar-img" src="" alt="Avatar" style="display: none;">
@@ -1156,7 +1091,7 @@
           </div>
           <div>
             <div style="color: #FFFFFF; font-size: 14px; font-weight: 700;">Profile Picture</div>
-            <div style="color: var(--text-gray); font-size: 11px; margin-bottom: 8px;">Upload your official uniform / badge photo</div>
+            <div style="color: var(--text-gray); font-size: 11px; margin-bottom: 8px;">Upload uniform or official badge photo</div>
             <label class="btn" style="background: var(--cyan); color: #070D1E; padding: 6px 14px; font-size: 11.5px; cursor: pointer;">
               📷 Choose New Photo
               <input type="file" id="profile-photo-input" accept="image/*" style="display: none;" onchange="handlePhotoUpload(event)">
@@ -1205,7 +1140,7 @@
         <!-- Change Password Box -->
         <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-subtle);">
           <div style="color: var(--red); font-size: 12px; font-weight: 800; margin-bottom: 12px;">CHANGE PASSWORD</div>
-          <form id="change-pass-form" onsubmit="handleChangePassword(event)">
+          <form id="change-pass-form" onsubmit="handlePasswordChange(event)">
             <div class="form-group">
               <label class="form-label">New Password (min 6 chars) *</label>
               <input type="password" id="prof-new-pass" class="form-input" minlength="6" required>
@@ -1218,196 +1153,274 @@
       </div>
     </div>
 
-    <!-- ========================================== -->
-    <!-- 7. ADMIN CONSOLE                           -->
-    <!-- ========================================== -->
-    <div id="screen-admin" class="screen-view">
-      <div style="padding: 16px 20px; display: flex; align-items: center; gap: 12px;">
-        <button class="btn" onclick="navigateTo('screen-dashboard')" style="width: 36px; height: 36px; background: #0B172E; color: var(--cyan); border: 1px solid var(--border-blue);">←</button>
-        <div>
-          <h2 style="color: var(--purple); font-size: 16px; font-weight: 900;">ADMIN CONTROL CONSOLE</h2>
-          <p style="color: var(--text-gray); font-size: 11px;">UPSRTC Fleet & Portal Administration</p>
-        </div>
-      </div>
-
-      <div style="margin: 0 16px 14px 16px; padding: 16px; background: #0B172E; border: 1.2px solid var(--purple); border-radius: var(--radius-lg);">
-        <h3 style="color: var(--yellow); font-size: 13px; font-weight: 800; margin-bottom: 10px;">PORTAL URL LINKS</h3>
-        <form onsubmit="handleSavePortalSettings(event)">
-          <div class="form-group">
-            <label class="form-label">Pay Slip Portal URL</label>
-            <input type="url" id="admin-url-payslip" class="form-input" required>
-          </div>
-          <div class="form-group">
-            <label class="form-label">EPFO PF Portal URL</label>
-            <input type="url" id="admin-url-pf" class="form-input" required>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Challan Portal URL</label>
-            <input type="url" id="admin-url-challan" class="form-input" required>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Manav Sampada HR URL</label>
-            <input type="url" id="admin-url-manav" class="form-input" required>
-          </div>
-          <button type="submit" class="btn" style="background: var(--purple); color: #070D1E; width: 100%; height: 42px;">
-            SAVE PORTAL URLS
-          </button>
-        </form>
-      </div>
-
-      <!-- Backup / Restore Section -->
-      <div style="margin: 0 16px 16px 16px; padding: 16px; background: #0B172E; border: 1px solid var(--border-blue); border-radius: var(--radius-lg);">
-        <h3 style="color: var(--cyan); font-size: 13px; font-weight: 800; margin-bottom: 8px;">DATA BACKUP & RESTORE</h3>
-        <p style="color: var(--text-gray); font-size: 11px; margin-bottom: 12px;">Export all local records to a JSON file or restore from a backup.</p>
-        <div style="display: flex; gap: 10px;">
-          <button class="btn" onclick="backupDatabaseJSON()" style="flex: 1; height: 40px; background: #0F254B; color: var(--cyan); border: 1px solid var(--cyan);">
-            💾 Backup DB
-          </button>
-          <label class="btn" style="flex: 1; height: 40px; background: #0F254B; color: var(--yellow); border: 1px solid var(--yellow); cursor: pointer;">
-            📂 Restore DB
-            <input type="file" accept=".json" style="display: none;" onchange="restoreDatabaseJSON(event)">
-          </label>
-        </div>
-      </div>
-    </div>
-
-  </div> <!-- /#app-container -->
-
-  <!-- Toast Notification Bar -->
-  <div id="toast-msg">Notification Message</div>
-
-  <!-- Logout Confirmation Dialog -->
-  <div id="logout-modal" class="modal-backdrop">
-    <div class="modal-box" style="text-align: center;">
-      <h3 style="color: var(--red); font-size: 18px; margin-bottom: 10px;">CONFIRM LOGOUT</h3>
-      <p style="color: var(--text-gray); font-size: 13px; margin-bottom: 20px;">Are you sure you want to log out of UPSRTC Duty Portal?</p>
-      <div style="display: flex; gap: 12px; justify-content: center;">
-        <button class="btn" onclick="closeModal('logout-modal')" style="background: #091730; color: #FFFFFF; border: 1px solid var(--border-blue); padding: 10px 24px;">Cancel</button>
-        <button class="btn" onclick="executeLogout()" style="background: var(--red); color: #FFFFFF; padding: 10px 24px;">Yes, Logout</button>
-      </div>
-    </div>
   </div>
 
-  <!-- ========================================== -->
-  <!-- CLIENT-SIDE APPLICATION JAVASCRIPT LOGIC   -->
-  <!-- ========================================== -->
-  <script>
-    // --- Initial Storage & Database Seeds ---
-    const STORAGE_KEY_USER = 'upsrtc_current_user';
-    const STORAGE_KEY_USERS = 'upsrtc_registered_users';
-    const STORAGE_KEY_DUTIES = 'upsrtc_duty_records';
-    const STORAGE_KEY_SETTINGS = 'upsrtc_portal_settings';
+  <!-- Toast Notification Message -->
+  <div id="toast-msg">Notification</div>
 
-    const DEFAULT_SETTINGS = {
-      paySlip: 'https://payroll.mectoi.in/upsrtc',
+  <!-- ======================================================== -->
+  <!-- JAVASCRIPT: ENTIRE APP LOGIC, STATE, STORAGE & CALCS     -->
+  <!-- ======================================================== -->
+  <script>
+    // -------------------------------------------------------------
+    // App State & Pre-seeded Local Storage
+    // -------------------------------------------------------------
+    const STORAGE_KEY_USER = 'upsrtc_current_user_v4';
+    const STORAGE_KEY_USERS = 'upsrtc_users_db_v4';
+    const STORAGE_KEY_DUTIES = 'upsrtc_duties_db_v4';
+    const STORAGE_KEY_SETTINGS = 'upsrtc_portal_settings_v4';
+
+    const defaultPortalUrls = {
+      paySlip: 'https://payroll.mectoi.in/',
       pf: 'https://passbook.epfindia.gov.in/MemberPassBook/Login',
-      challan: 'https://echallan.parivahan.gov.in',
-      manav: 'https://ehrms.upsdc.gov.in'
+      challan: 'https://echallan.parivahan.gov.in/',
+      manav: 'https://ehrms.upsdc.gov.in/'
     };
 
-    const SEED_USERS = [
-      {
-        fullName: 'Surendra',
-        email: 'surendra@upsrtc.in',
-        mobile: '9876543210',
-        employeeId: 'CND 1901',
-        employeeType: 'CONDUCTOR',
-        depot: 'SOHRAB GATE DEPOT',
-        depotCode: 'SGD-01',
-        designation: 'UPSRTC Verified Conductor',
-        dob: '1988-06-15',
-        password: '123456',
-        photoUrl: '',
-        role: 'USER'
-      },
-      {
-        fullName: 'HQ Admin Officer',
-        email: 'admin@upsrtc.in',
-        mobile: '9899001122',
-        employeeId: 'ADMIN001',
-        employeeType: 'CONDUCTOR',
-        depot: 'HEADQUARTERS LUCKNOW',
-        depotCode: 'HQ-01',
-        designation: 'Senior Portal Administrator',
-        dob: '1982-01-01',
-        password: 'admin123',
-        photoUrl: '',
-        role: 'ADMIN'
-      }
-    ];
-
-    const SEED_DUTIES = [
-      {
-        id: 'duty-1',
-        userEmpId: 'CND 1901',
-        date: '2026-09-20',
-        dutyNumber: '01',
-        shift: 'Morning',
-        busNumber: '4210',
-        routeFrom: 'MEERUT',
-        routeTo: 'DELHI ISBT',
-        depTime: '06:00',
-        arrTime: '11:30',
-        openKm: 12100,
-        closeKm: 12340,
-        totalKm: 240,
-        passengers: 50,
-        seats: 52,
-        loadFactor: 96.1,
-        income: 8450,
-        remarks: 'Heavy passenger rush'
-      },
-      {
-        id: 'duty-2',
-        userEmpId: 'CND 1901',
-        date: '2026-09-21',
-        dutyNumber: '02',
-        shift: 'Morning',
-        busNumber: '4210',
-        routeFrom: 'MEERUT',
-        routeTo: 'MORADABAD',
-        depTime: '07:15',
-        arrTime: '12:45',
-        openKm: 12340,
-        closeKm: 12560,
-        totalKm: 220,
-        passengers: 48,
-        seats: 52,
-        loadFactor: 92.3,
-        income: 7650,
-        remarks: 'Normal run'
-      }
-    ];
-
-    // Initialization on load
-    document.addEventListener('DOMContentLoaded', () => {
+    // Prepopulate sample user & records if empty
+    function initializeStorage() {
       if (!localStorage.getItem(STORAGE_KEY_USERS)) {
-        localStorage.setItem(STORAGE_KEY_USERS, JSON.stringify(SEED_USERS));
+        const defaultUsers = [
+          {
+            id: 'u1',
+            employeeId: 'CND 1901',
+            fullName: 'Surendra',
+            email: 'surendra@upsrtc.in',
+            password: '123456',
+            mobile: '9876543210',
+            dob: '1988-06-15',
+            depot: 'SOHRAB GATE DEPOT',
+            depotCode: 'SGD-01',
+            designation: 'UPSRTC Verified Conductor',
+            employeeType: 'CONDUCTOR',
+            photoUrl: ''
+          },
+          {
+            id: 'admin1',
+            employeeId: 'ADMIN001',
+            fullName: 'HQ System Administrator',
+            email: 'admin@upsrtc.in',
+            password: 'admin123',
+            mobile: '9999999999',
+            dob: '1980-01-01',
+            depot: 'HEADQUARTERS LUCKNOW',
+            depotCode: 'HQ-LKO',
+            designation: 'Portal Administrator',
+            employeeType: 'CONDUCTOR',
+            photoUrl: ''
+          }
+        ];
+        localStorage.setItem(STORAGE_KEY_USERS, JSON.stringify(defaultUsers));
       }
+
       if (!localStorage.getItem(STORAGE_KEY_DUTIES)) {
-        localStorage.setItem(STORAGE_KEY_DUTIES, JSON.stringify(SEED_DUTIES));
+        const now = new Date();
+        const yr = now.getFullYear();
+        const mo = String(now.getMonth() + 1).padStart(2, '0');
+        const pad = (d) => String(d).padStart(2, '0');
+
+        const defaultDuties = [
+          {
+            id: 'd1',
+            userId: 'u1',
+            employeeId: 'CND 1901',
+            dutyDate: `${yr}-${mo}-04`,
+            dutyNumber: '01',
+            shift: 'Morning',
+            busNumber: '4210',
+            routeFrom: 'MEERUT',
+            routeTo: 'DELHI ISBT',
+            departureTime: '06:30',
+            arrivalTime: '11:45',
+            openingKm: 12450,
+            closingKm: 12680,
+            totalKm: 230,
+            passengerCount: 48,
+            totalSeats: 52,
+            loadFactor: 92.3,
+            income: 7850,
+            expenses: 0,
+            remarks: 'On-time schedule'
+          },
+          {
+            id: 'd2',
+            userId: 'u1',
+            employeeId: 'CND 1901',
+            dutyDate: `${yr}-${mo}-08`,
+            dutyNumber: '02',
+            shift: 'Morning',
+            busNumber: '4210',
+            routeFrom: 'MEERUT',
+            routeTo: 'AGRA ISBT',
+            departureTime: '05:45',
+            arrivalTime: '12:30',
+            openingKm: 12680,
+            closingKm: 12970,
+            totalKm: 290,
+            passengerCount: 50,
+            totalSeats: 52,
+            loadFactor: 96.2,
+            income: 9450,
+            expenses: 0,
+            remarks: 'Full capacity express trip'
+          },
+          {
+            id: 'd3',
+            userId: 'u1',
+            employeeId: 'CND 1901',
+            dutyDate: `${yr}-${mo}-12`,
+            dutyNumber: '01',
+            shift: 'Evening',
+            busNumber: '4210',
+            routeFrom: 'MEERUT',
+            routeTo: 'BAREILLY',
+            departureTime: '14:00',
+            arrivalTime: '19:40',
+            openingKm: 12970,
+            closingKm: 13220,
+            totalKm: 250,
+            passengerCount: 46,
+            totalSeats: 52,
+            loadFactor: 88.5,
+            income: 8200,
+            expenses: 0,
+            remarks: 'Smooth run'
+          },
+          {
+            id: 'd4',
+            userId: 'u1',
+            employeeId: 'CND 1901',
+            dutyDate: `${yr}-${mo}-16`,
+            dutyNumber: '01',
+            shift: 'Morning',
+            busNumber: '4210',
+            routeFrom: 'MEERUT',
+            routeTo: 'HARIDWAR',
+            departureTime: '06:00',
+            arrivalTime: '11:15',
+            openingKm: 13220,
+            closingKm: 13430,
+            totalKm: 210,
+            passengerCount: 44,
+            totalSeats: 52,
+            loadFactor: 84.6,
+            income: 7150,
+            expenses: 0,
+            remarks: 'On-time clearance'
+          },
+          {
+            id: 'd5',
+            userId: 'u1',
+            employeeId: 'CND 1901',
+            dutyDate: `${yr}-${mo}-20`,
+            dutyNumber: '03',
+            shift: 'Double',
+            busNumber: '4210',
+            routeFrom: 'MEERUT',
+            routeTo: 'LUCKNOW',
+            departureTime: '07:30',
+            arrivalTime: '16:00',
+            openingKm: 13430,
+            closingKm: 13780,
+            totalKm: 350,
+            passengerCount: 52,
+            totalSeats: 52,
+            loadFactor: 100.0,
+            income: 11200,
+            expenses: 0,
+            remarks: 'Peak festival load - High collection'
+          },
+          {
+            id: 'd6',
+            userId: 'u1',
+            employeeId: 'CND 1901',
+            dutyDate: `${yr}-${mo}-${pad(now.getDate())}`,
+            dutyNumber: '01',
+            shift: 'Morning',
+            busNumber: '4210',
+            routeFrom: 'MEERUT',
+            routeTo: 'DELHI ISBT',
+            departureTime: '06:30',
+            arrivalTime: '11:45',
+            openingKm: 13780,
+            closingKm: 14010,
+            totalKm: 230,
+            passengerCount: 49,
+            totalSeats: 52,
+            loadFactor: 94.2,
+            income: 8850,
+            expenses: 0,
+            remarks: 'Today on-time trip completion'
+          }
+        ];
+        localStorage.setItem(STORAGE_KEY_DUTIES, JSON.stringify(defaultDuties));
       }
+
       if (!localStorage.getItem(STORAGE_KEY_SETTINGS)) {
-        localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(DEFAULT_SETTINGS));
+        localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(defaultPortalUrls));
+      }
+    }
+
+    // -------------------------------------------------------------
+    // Screen Navigation
+    // -------------------------------------------------------------
+    function navigateTo(screenId) {
+      document.querySelectorAll('.screen-view').forEach(screen => {
+        screen.classList.remove('active');
+      });
+      const target = document.getElementById(screenId);
+      if (target) {
+        target.classList.add('active');
+        window.scrollTo(0, 0);
       }
 
-      startLiveClock();
-      setupInitialDates();
-
-      // Check current login state
-      const currentUser = getCurrentUser();
-      if (currentUser) {
-        loadDashboard(currentUser);
-        navigateTo('screen-dashboard');
-      } else {
-        navigateTo('screen-login');
+      if (screenId === 'screen-dashboard') {
+        updateDashboardView();
+      } else if (screenId === 'screen-show-data') {
+        const monthInput = document.getElementById('report-month-filter');
+        if (!monthInput.value) {
+          const now = new Date();
+          const yr = now.getFullYear();
+          const mo = String(now.getMonth() + 1).padStart(2, '0');
+          monthInput.value = `${yr}-${mo}`;
+        }
+        renderDutyTable();
+      } else if (screenId === 'screen-profile') {
+        populateProfileForm();
+      } else if (screenId === 'screen-feed-duty') {
+        const dateInput = document.getElementById('duty-date');
+        if (!dateInput.value) {
+          setDutyDateToday();
+        }
       }
-    });
+    }
 
-    // --- State Accessors ---
+    // -------------------------------------------------------------
+    // Live Digital Clock
+    // -------------------------------------------------------------
+    function updateLiveClock() {
+      const now = new Date();
+      const hrs = String(now.getHours()).padStart(2, '0');
+      const min = String(now.getMinutes()).padStart(2, '0');
+      const sec = String(now.getSeconds()).padStart(2, '0');
+      const timeStr = `${hrs}:${min}:${sec}`;
+
+      const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+      const dateStr = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+
+      const clockEl = document.getElementById('dash-live-time');
+      const dateEl = document.getElementById('dash-live-date');
+      if (clockEl) clockEl.textContent = timeStr;
+      if (dateEl) dateEl.textContent = dateStr;
+    }
+    setInterval(updateLiveClock, 1000);
+
+    // -------------------------------------------------------------
+    // Authentication Operations
+    // -------------------------------------------------------------
     function getCurrentUser() {
-      const data = localStorage.getItem(STORAGE_KEY_USER);
-      return data ? JSON.parse(data) : null;
+      const u = localStorage.getItem(STORAGE_KEY_USER);
+      return u ? JSON.parse(u) : null;
     }
 
     function setCurrentUser(user) {
@@ -1418,225 +1431,154 @@
       }
     }
 
-    function getUsers() {
-      return JSON.parse(localStorage.getItem(STORAGE_KEY_USERS) || '[]');
+    function quickFillLogin(ident, pass) {
+      document.getElementById('login-identifier').value = ident;
+      document.getElementById('login-password').value = pass;
+      showToast('Credentials filled. Click Login!');
     }
 
-    function saveUsers(users) {
-      localStorage.setItem(STORAGE_KEY_USERS, JSON.stringify(users));
-    }
-
-    function getDuties() {
-      return JSON.parse(localStorage.getItem(STORAGE_KEY_DUTIES) || '[]');
-    }
-
-    function saveDuties(duties) {
-      localStorage.setItem(STORAGE_KEY_DUTIES, JSON.stringify(duties));
-    }
-
-    function getSettings() {
-      return JSON.parse(localStorage.getItem(STORAGE_KEY_SETTINGS) || JSON.stringify(DEFAULT_SETTINGS));
-    }
-
-    // --- Live Clock Engine ---
-    function startLiveClock() {
-      const timeEl = document.getElementById('dash-live-time');
-      const dateEl = document.getElementById('dash-live-date');
-
-      function update() {
-        const now = new Date();
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        const seconds = String(now.getSeconds()).padStart(2, '0');
-        if (timeEl) timeEl.innerText = `${hours}:${minutes}:${seconds}`;
-
-        const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEPT', 'OCT', 'NOV', 'DEC'];
-        const day = now.getDate();
-        const month = months[now.getMonth()];
-        const year = now.getFullYear();
-        if (dateEl) dateEl.innerText = `${day} ${month} ${year}`;
-      }
-      update();
-      setInterval(update, 1000);
-    }
-
-    function setupInitialDates() {
-      const today = new Date().toISOString().split('T')[0];
-      const dutyDateInput = document.getElementById('duty-date');
-      if (dutyDateInput) dutyDateInput.value = today;
-
-      const currentMonth = today.slice(0, 7);
-      const monthFilter = document.getElementById('report-month-filter');
-      if (monthFilter) monthFilter.value = currentMonth;
-    }
-
-    // --- Navigation Flow ---
-    function navigateTo(screenId) {
-      document.querySelectorAll('.screen-view').forEach(s => s.classList.remove('active'));
-      const target = document.getElementById(screenId);
-      if (target) {
-        target.classList.add('active');
-        window.scrollTo(0, 0);
-
-        if (screenId === 'screen-show-data') {
-          renderDutyTable();
-        } else if (screenId === 'screen-profile') {
-          populateProfileScreen();
-        } else if (screenId === 'screen-admin') {
-          populateAdminScreen();
-        }
-      }
-    }
-
-    function showToast(msg) {
-      const toast = document.getElementById('toast-msg');
-      if (toast) {
-        toast.innerText = msg;
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 3200);
-      }
-    }
-
-    // --- Authentication Handlers ---
-    function handleLoginSubmit(e) {
-      e.preventDefault();
+    function handleLoginSubmit(event) {
+      event.preventDefault();
       const identifier = document.getElementById('login-identifier').value.trim();
-      const password = document.getElementById('login-password').value;
+      const password = document.getElementById('login-password').value.trim();
 
-      const users = getUsers();
-      const found = users.find(u => 
-        (u.employeeId.toLowerCase() === identifier.toLowerCase() ||
-         u.email.toLowerCase() === identifier.toLowerCase() ||
-         u.mobile === identifier) &&
+      const users = JSON.parse(localStorage.getItem(STORAGE_KEY_USERS) || '[]');
+      const user = users.find(u => 
+        (u.employeeId.equalsIgnoreCase(identifier) || 
+         u.email.toLowerCase() === identifier.toLowerCase() || 
+         u.mobile === identifier) && 
         u.password === password
       );
 
-      if (found) {
-        setCurrentUser(found);
-        loadDashboard(found);
-        showToast(`Welcome back, ${found.fullName}!`);
+      if (user) {
+        setCurrentUser(user);
+        showToast(`Welcome back, ${user.fullName}!`);
         navigateTo('screen-dashboard');
       } else {
-        alert('Invalid credentials! Please check your Employee ID / Email and Password.');
+        alert('Invalid credentials! Please check your Employee ID / Password.');
       }
     }
 
-    function quickFillLogin(id, pass) {
-      document.getElementById('login-identifier').value = id;
-      document.getElementById('login-password').value = pass;
-      document.getElementById('login-form').dispatchEvent(new Event('submit'));
-    }
+    String.prototype.equalsIgnoreCase = function (other) {
+      return this.toLowerCase().replace(/\s+/g, '') === String(other).toLowerCase().replace(/\s+/g, '');
+    };
 
     function handleGoogleSignIn() {
-      const users = getUsers();
-      const defaultUser = users[0];
-      setCurrentUser(defaultUser);
-      loadDashboard(defaultUser);
-      showToast('Google Sign-in Successful!');
+      // Direct Google simulation for instant client side access
+      const users = JSON.parse(localStorage.getItem(STORAGE_KEY_USERS) || '[]');
+      const user = users[0];
+      setCurrentUser(user);
+      showToast(`Google Sign-In Verified: ${user.fullName}`);
       navigateTo('screen-dashboard');
     }
 
-    function handleRegisterSubmit(e) {
-      e.preventDefault();
+    function confirmLogout() {
+      if (confirm('Are you sure you want to log out of the Duty Portal?')) {
+        setCurrentUser(null);
+        showToast('Logged out securely.');
+        navigateTo('screen-login');
+      }
+    }
+
+    function handleRegisterSubmit(event) {
+      event.preventDefault();
+      const name = document.getElementById('reg-name').value.trim();
+      const dob = document.getElementById('reg-dob').value;
+      const mobile = document.getElementById('reg-mobile').value.trim();
+      const email = document.getElementById('reg-email').value.trim();
       const pass = document.getElementById('reg-pass').value;
       const confirmPass = document.getElementById('reg-confirm-pass').value;
+      const empId = document.getElementById('reg-empid').value.trim();
+      const type = document.getElementById('reg-type').value;
+      const depot = document.getElementById('reg-depot').value.trim();
+      const depotCode = document.getElementById('reg-depot-code').value.trim();
+      const designation = document.getElementById('reg-designation').value.trim();
 
       if (pass !== confirmPass) {
-        alert('Passwords do not match! Please check and try again.');
+        alert('Passwords do not match!');
+        return;
+      }
+
+      const users = JSON.parse(localStorage.getItem(STORAGE_KEY_USERS) || '[]');
+      if (users.some(u => u.employeeId.equalsIgnoreCase(empId))) {
+        alert(`Employee ID ${empId} is already registered!`);
         return;
       }
 
       const newUser = {
-        fullName: document.getElementById('reg-name').value.trim(),
-        dob: document.getElementById('reg-dob').value,
-        mobile: document.getElementById('reg-mobile').value.trim(),
-        email: document.getElementById('reg-email').value.trim(),
+        id: 'u_' + Date.now(),
+        employeeId: empId,
+        fullName: name,
+        email: email,
         password: pass,
-        employeeId: document.getElementById('reg-empid').value.trim(),
-        employeeType: document.getElementById('reg-type').value,
-        depot: document.getElementById('reg-depot').value.trim().toUpperCase(),
-        depotCode: document.getElementById('reg-depot-code').value.trim(),
-        designation: document.getElementById('reg-designation').value.trim() || 'Verified Employee',
-        photoUrl: '',
-        role: 'USER'
+        mobile: mobile,
+        dob: dob,
+        depot: depot,
+        depotCode: depotCode,
+        designation: designation,
+        employeeType: type,
+        photoUrl: ''
       };
 
-      const users = getUsers();
-      if (users.some(u => u.employeeId.toLowerCase() === newUser.employeeId.toLowerCase())) {
-        alert('Employee ID already registered! Please sign in.');
+      users.push(newUser);
+      localStorage.setItem(STORAGE_KEY_USERS, JSON.stringify(users));
+      setCurrentUser(newUser);
+
+      showToast('Registration successful!');
+      navigateTo('screen-dashboard');
+    }
+
+    // -------------------------------------------------------------
+    // Dashboard Rendering
+    // -------------------------------------------------------------
+    function updateDashboardView() {
+      const user = getCurrentUser();
+      if (!user) {
+        navigateTo('screen-login');
         return;
       }
 
-      users.push(newUser);
-      saveUsers(users);
+      document.getElementById('dash-user-name').textContent = user.fullName;
+      document.getElementById('dash-user-cnd').textContent = `| ${user.employeeId} |`;
+      document.getElementById('dash-user-depot').textContent = user.depot || 'UPSRTC DEPOT';
+      document.getElementById('dash-user-verified').textContent = `${user.designation || 'UPSRTC Staff'} • ${user.depot || 'DEPOT'}`;
 
-      alert('Account created successfully. Please login to continue.');
-      document.getElementById('register-form').reset();
-      navigateTo('screen-login');
-      document.getElementById('login-identifier').value = newUser.employeeId;
-    }
-
-    function confirmLogout() {
-      document.getElementById('logout-modal').classList.add('open');
-    }
-
-    function closeModal(id) {
-      document.getElementById(id).classList.remove('open');
-    }
-
-    function executeLogout() {
-      closeModal('logout-modal');
-      setCurrentUser(null);
-      showToast('Logged out successfully.');
-      navigateTo('screen-login');
-    }
-
-    // --- Dashboard Loader ---
-    function loadDashboard(user) {
-      document.getElementById('dash-user-name').innerText = user.fullName;
-      document.getElementById('dash-user-cnd').innerText = `| ${user.employeeId} |`;
-      document.getElementById('dash-user-depot').innerText = user.depot || 'SOHRAB GATE DEPOT';
-      document.getElementById('dash-user-verified').innerText = 
-        `UPSRTC Verified ${user.employeeType === 'DRIVER' ? 'Driver' : 'Conductor'} • ${user.depot || 'DEPOT'}`;
-
-      // Update avatar
-      const imgEl = document.getElementById('dash-avatar-img');
-      const svgEl = document.getElementById('dash-avatar-svg');
-      if (user.photoUrl) {
-        imgEl.src = user.photoUrl;
-        imgEl.style.display = 'block';
-        svgEl.style.display = 'none';
+      const avatarImg = document.getElementById('dash-avatar-img');
+      const avatarSvg = document.getElementById('dash-avatar-svg');
+      if (user.photoUrl && user.photoUrl.trim() !== '') {
+        avatarImg.src = user.photoUrl;
+        avatarImg.style.display = 'block';
+        avatarSvg.style.display = 'none';
       } else {
-        imgEl.style.display = 'none';
-        svgEl.style.display = 'block';
-      }
-
-      // Show admin button if role is ADMIN
-      const adminBtn = document.getElementById('dash-admin-btn');
-      if (adminBtn) {
-        adminBtn.style.display = (user.role === 'ADMIN' || user.role === 'SUPER_ADMIN') ? 'flex' : 'none';
+        avatarImg.style.display = 'none';
+        avatarSvg.style.display = 'block';
       }
     }
 
-    // --- External Portals Launcher ---
-    function openExternalPortal(key) {
-      const settings = getSettings();
-      const url = settings[key] || DEFAULT_SETTINGS[key];
+    // -------------------------------------------------------------
+    // External Portal Openers
+    // -------------------------------------------------------------
+    function openExternalPortal(type) {
+      const settings = JSON.parse(localStorage.getItem(STORAGE_KEY_SETTINGS) || '{}');
+      const url = settings[type] || defaultPortalUrls[type];
       if (url) {
         window.open(url, '_blank', 'noopener,noreferrer');
       }
     }
 
-    // --- Feed Duty & Date Pickers ---
+    // -------------------------------------------------------------
+    // Duty Entry Calculations & Date Helpers
+    // -------------------------------------------------------------
     function setDutyDateToday() {
       const today = new Date().toISOString().split('T')[0];
       document.getElementById('duty-date').value = today;
     }
 
     function setDutyDateYesterday() {
-      const d = new Date();
-      d.setDate(d.getDate() - 1);
-      document.getElementById('duty-date').value = d.toISOString().split('T')[0];
+      const cal = new Date();
+      cal.setDate(cal.getDate() - 1);
+      const yesterday = cal.toISOString().split('T')[0];
+      document.getElementById('duty-date').value = yesterday;
     }
 
     function calculateKM() {
@@ -1647,392 +1589,604 @@
     }
 
     function calculateLoadFactor() {
-      const passengers = parseFloat(document.getElementById('duty-passengers').value) || 0;
+      const pass = parseFloat(document.getElementById('duty-passengers').value) || 0;
       const seats = parseFloat(document.getElementById('duty-seats').value) || 52;
-      const lf = seats > 0 ? ((passengers / seats) * 100).toFixed(1) : 0;
+      const lf = seats > 0 ? ((pass / seats) * 100).toFixed(1) : '0.0';
       document.getElementById('duty-load-factor').value = `${lf}%`;
     }
 
-    function handleDutySubmit(e) {
-      e.preventDefault();
-      const currentUser = getCurrentUser();
-      if (!currentUser) return;
+    function handleDutySubmit(event) {
+      event.preventDefault();
+      const user = getCurrentUser();
+      if (!user) return;
+
+      const date = document.getElementById('duty-date').value;
+      const dutyNum = document.getElementById('duty-num').value.trim();
+      const shift = document.getElementById('duty-shift').value;
+      const bus = document.getElementById('duty-bus').value.trim();
+      const routeFrom = document.getElementById('duty-from').value.trim();
+      const routeTo = document.getElementById('duty-to').value.trim();
+      const depTime = document.getElementById('duty-dep-time').value;
+      const arrTime = document.getElementById('duty-arr-time').value;
+      const openKm = parseFloat(document.getElementById('duty-open-km').value) || 0;
+      const closeKm = parseFloat(document.getElementById('duty-close-km').value) || 0;
+      const totalKm = parseFloat(document.getElementById('duty-total-km').value) || (closeKm - openKm);
+      const passengers = parseInt(document.getElementById('duty-passengers').value) || 0;
+      const seats = parseInt(document.getElementById('duty-seats').value) || 52;
+      const lf = seats > 0 ? parseFloat(((passengers / seats) * 100).toFixed(1)) : 0;
+      const income = parseFloat(document.getElementById('duty-income').value) || 0;
+      const expenses = parseFloat(document.getElementById('duty-expenses').value) || 0;
+      const remarks = document.getElementById('duty-remarks').value.trim();
 
       const newDuty = {
-        id: 'duty-' + Date.now(),
-        userEmpId: currentUser.employeeId,
-        date: document.getElementById('duty-date').value,
-        dutyNumber: document.getElementById('duty-num').value.trim(),
-        shift: document.getElementById('duty-shift').value,
-        busNumber: document.getElementById('duty-bus').value.trim(),
-        routeFrom: document.getElementById('duty-from').value.trim().toUpperCase(),
-        routeTo: document.getElementById('duty-to').value.trim().toUpperCase(),
-        depTime: document.getElementById('duty-dep-time').value,
-        arrTime: document.getElementById('duty-arr-time').value,
-        openKm: parseFloat(document.getElementById('duty-open-km').value) || 0,
-        closeKm: parseFloat(document.getElementById('duty-close-km').value) || 0,
-        totalKm: parseFloat(document.getElementById('duty-total-km').value) || 0,
-        passengers: parseInt(document.getElementById('duty-passengers').value) || 0,
-        seats: parseInt(document.getElementById('duty-seats').value) || 52,
-        loadFactor: parseFloat(document.getElementById('duty-load-factor').value) || 0,
-        income: parseFloat(document.getElementById('duty-income').value) || 0,
-        expenses: parseFloat(document.getElementById('duty-expenses').value) || 0,
-        remarks: document.getElementById('duty-remarks').value.trim()
+        id: 'duty_' + Date.now(),
+        userId: user.id,
+        employeeId: user.employeeId,
+        dutyDate: date,
+        dutyNumber: dutyNum,
+        shift: shift,
+        busNumber: bus,
+        routeFrom: routeFrom,
+        routeTo: routeTo,
+        departureTime: depTime,
+        arrivalTime: arrTime,
+        openingKm: openKm,
+        closingKm: closeKm,
+        totalKm: totalKm,
+        passengerCount: passengers,
+        totalSeats: seats,
+        loadFactor: lf,
+        income: income,
+        expenses: expenses,
+        remarks: remarks
       };
 
-      const duties = getDuties();
-      duties.unshift(newDuty);
-      saveDuties(duties);
+      const duties = JSON.parse(localStorage.getItem(STORAGE_KEY_DUTIES) || '[]');
+      duties.push(newDuty);
+      localStorage.setItem(STORAGE_KEY_DUTIES, JSON.stringify(duties));
 
-      showToast('Duty Entry Saved Successfully!');
+      showToast('Duty Log Saved Successfully!');
       navigateTo('screen-show-data');
     }
 
-    // --- Show Data & Reports Engine ---
+    // -------------------------------------------------------------
+    // Show Data & Report Calculations
+    // -------------------------------------------------------------
     function renderDutyTable() {
-      const currentUser = getCurrentUser();
-      if (!currentUser) return;
+      const user = getCurrentUser();
+      if (!user) return;
 
-      const monthFilter = document.getElementById('report-month-filter').value; // 'YYYY-MM'
-      const duties = getDuties().filter(d => 
-        d.userEmpId === currentUser.employeeId &&
-        (!monthFilter || d.date.startsWith(monthFilter))
-      );
+      const filterMonth = document.getElementById('report-month-filter').value;
+      const allDuties = JSON.parse(localStorage.getItem(STORAGE_KEY_DUTIES) || '[]');
+      
+      const filtered = allDuties.filter(d => 
+        (d.userId === user.id || d.employeeId === user.employeeId) &&
+        (!filterMonth || d.dutyDate.startsWith(filterMonth))
+      ).sort((a, b) => b.dutyDate.localeCompare(a.dutyDate));
 
-      // Calculate KPI summary
-      let totalDuties = duties.length;
+      // Calculate Metrics
       let totalKm = 0;
       let totalIncome = 0;
-      let sumLF = 0;
+      let sumLf = 0;
 
-      duties.forEach(d => {
+      filtered.forEach(d => {
         totalKm += (d.totalKm || 0);
         totalIncome += (d.income || 0);
-        sumLF += (d.loadFactor || 0);
+        sumLf += (d.loadFactor || 0);
       });
 
-      const avgLF = totalDuties > 0 ? (sumLF / totalDuties).toFixed(1) : 0;
+      const avgLf = filtered.length > 0 ? (sumLf / filtered.length).toFixed(1) : 0;
 
-      document.getElementById('kpi-duties').innerText = totalDuties;
-      document.getElementById('kpi-km').innerText = totalKm;
-      document.getElementById('kpi-income').innerText = `₹${totalIncome.toLocaleString('en-IN')}`;
-      document.getElementById('kpi-lf').innerText = `${avgLF}%`;
+      document.getElementById('kpi-duties').textContent = filtered.length;
+      document.getElementById('kpi-km').textContent = totalKm;
+      document.getElementById('kpi-income').textContent = `₹${totalIncome.toLocaleString('en-IN')}`;
+      document.getElementById('kpi-lf').textContent = `${avgLf}%`;
+
+      // Render Recharts Daily Income Trend Chart
+      renderIncomeTrendChart(filtered, filterMonth);
 
       const tbody = document.getElementById('duty-table-body');
-      if (duties.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="padding: 24px; text-align: center; color: var(--text-gray);">No duty records found for selected month.</td></tr>`;
+      tbody.innerHTML = '';
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 24px; color: var(--text-gray);">No duty entries logged for this month.</td></tr>`;
         return;
       }
 
-      tbody.innerHTML = duties.map(d => `
-        <tr style="border-bottom: 1px solid var(--border-subtle);">
-          <td style="padding: 9px 8px; font-weight: 700; color: #FFFFFF;">${d.date.slice(5)}</td>
-          <td style="padding: 9px 8px; color: var(--yellow);">${d.busNumber}</td>
-          <td style="padding: 9px 8px; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${d.routeFrom} → ${d.routeTo}</td>
-          <td style="padding: 9px 8px; color: var(--cyan);">${d.totalKm}</td>
-          <td style="padding: 9px 8px; color: var(--green);">₹${d.income}</td>
-          <td style="padding: 9px 8px;">${d.loadFactor}%</td>
-          <td style="padding: 9px 8px;">
-            <button onclick="deleteDutyEntry('${d.id}')" style="background: transparent; border: none; color: var(--red); cursor: pointer; font-size: 13px;" title="Delete">🗑️</button>
+      filtered.forEach(d => {
+        const tr = document.createElement('tr');
+        tr.style.borderBottom = '1px solid var(--border-subtle)';
+        tr.innerHTML = `
+          <td style="padding: 10px 8px; color: #FFF; font-weight: 600;">${d.dutyDate}</td>
+          <td style="padding: 10px 8px; color: var(--yellow);">${d.busNumber}</td>
+          <td style="padding: 10px 8px; color: var(--cyan);">${d.routeFrom} → ${d.routeTo}</td>
+          <td style="padding: 10px 8px; font-weight: 700;">${d.totalKm}</td>
+          <td style="padding: 10px 8px; color: var(--green); font-weight: 700;">₹${d.income}</td>
+          <td style="padding: 10px 8px;">${d.loadFactor}%</td>
+          <td style="padding: 10px 8px;">
+            <button onclick="deleteDuty('${d.id}')" style="background: none; border: none; color: var(--red); cursor: pointer; font-size: 14px;">🗑️</button>
           </td>
-        </tr>
-      `).join('');
+        `;
+        tbody.appendChild(tr);
+      });
     }
 
-    function deleteDutyEntry(id) {
-      if (confirm('Are you sure you want to delete this duty record?')) {
-        let duties = getDuties().filter(d => d.id !== id);
-        saveDuties(duties);
-        showToast('Duty record deleted.');
+    // -------------------------------------------------------------
+    // Recharts Income Trend Performance Chart Engine
+    // -------------------------------------------------------------
+    function renderIncomeTrendChart(filteredDuties, filterMonth) {
+      const container = document.getElementById('recharts-income-chart-container');
+      if (!container) return;
+
+      // Group duties by date and calculate totals
+      const dailyMap = {};
+      filteredDuties.forEach(d => {
+        if (!dailyMap[d.dutyDate]) {
+          const parts = d.dutyDate.split('-');
+          const dayNum = parts[2] ? parseInt(parts[2], 10) : '';
+          const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+          const monthLabel = parts[1] ? monthNames[parseInt(parts[1], 10) - 1] : '';
+          dailyMap[d.dutyDate] = {
+            dutyDate: d.dutyDate,
+            dateLabel: `${dayNum} ${monthLabel}`,
+            dayNum: dayNum,
+            income: 0,
+            totalKm: 0,
+            busNumber: d.busNumber,
+            route: `${d.routeFrom} → ${d.routeTo}`,
+            loadFactor: d.loadFactor || 0,
+            count: 0
+          };
+        }
+        dailyMap[d.dutyDate].income += (d.income || 0);
+        dailyMap[d.dutyDate].totalKm += (d.totalKm || 0);
+        dailyMap[d.dutyDate].count += 1;
+      });
+
+      const chartData = Object.values(dailyMap).sort((a, b) => a.dutyDate.localeCompare(b.dutyDate));
+
+      // Calculate Peak, Average, and Active count
+      let maxIncome = 0;
+      let peakDate = '-';
+      let sumIncome = 0;
+      chartData.forEach(item => {
+        sumIncome += item.income;
+        if (item.income > maxIncome) {
+          maxIncome = item.income;
+          peakDate = item.dateLabel;
+        }
+      });
+
+      const activeDays = chartData.length;
+      const avgIncome = activeDays > 0 ? Math.round(sumIncome / activeDays) : 0;
+
+      // Update Quick Metrics in UI
+      const peakBadge = document.getElementById('chart-peak-badge');
+      const avgVal = document.getElementById('chart-avg-val');
+      const bestDay = document.getElementById('chart-best-day');
+      const activeDaysEl = document.getElementById('chart-active-days');
+
+      if (peakBadge) peakBadge.textContent = `Peak: ₹${maxIncome.toLocaleString('en-IN')}`;
+      if (avgVal) avgVal.textContent = `₹${avgIncome.toLocaleString('en-IN')}`;
+      if (bestDay) bestDay.textContent = peakDate;
+      if (activeDaysEl) activeDaysEl.textContent = `${activeDays} Day${activeDays === 1 ? '' : 's'}`;
+
+      if (chartData.length === 0) {
+        container.innerHTML = `
+          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 180px; color: var(--text-gray); font-size: 11px;">
+            <svg style="width: 32px; height: 32px; fill: var(--text-muted); margin-bottom: 8px;" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+            No income entries logged for ${filterMonth || 'this month'}.
+          </div>
+        `;
+        return;
+      }
+
+      // Check if Recharts is loaded via CDN (Production Recharts Engine)
+      if (window.Recharts && window.React && window.ReactDOM) {
+        try {
+          const { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid, ReferenceLine } = window.Recharts;
+          const e = window.React.createElement;
+
+          const CustomTooltip = ({ active, payload }) => {
+            if (active && payload && payload.length) {
+              const d = payload[0].payload;
+              return e('div', {
+                style: {
+                  background: 'rgba(7, 21, 43, 0.96)',
+                  border: '1.2px solid #00E5FF',
+                  padding: '9px 12px',
+                  borderRadius: '10px',
+                  boxShadow: '0 6px 20px rgba(0,0,0,0.85)',
+                  color: '#FFFFFF',
+                  fontSize: '11px',
+                  backdropFilter: 'blur(4px)',
+                  lineHeight: '1.4'
+                }
+              },
+                e('div', { style: { color: '#FFD600', fontWeight: '800', marginBottom: '3px' } }, `${d.dateLabel} (${d.dutyDate})`),
+                e('div', { style: { color: '#00E5FF', fontWeight: '800', fontSize: '13px' } }, `Income: ₹${d.income.toLocaleString('en-IN')}`),
+                e('div', { style: { color: '#8F9CAE', marginTop: '2px' } }, `Route: ${d.route || '-'}`),
+                e('div', { style: { color: '#00E676', fontWeight: '600' } }, `Bus: ${d.busNumber || '-'} | LF: ${d.loadFactor}%`)
+              );
+            }
+            return null;
+          };
+
+          const chartElement = e(ResponsiveContainer, { width: '100%', height: 210 },
+            e(AreaChart, { data: chartData, margin: { top: 12, right: 10, left: -16, bottom: 0 } },
+              e('defs', null,
+                e('linearGradient', { id: 'cyanIncomeGrad', x1: '0', y1: '0', x2: '0', y2: '1' },
+                  e('stop', { offset: '0%', stopColor: '#00E5FF', stopOpacity: 0.6 }),
+                  e('stop', { offset: '90%', stopColor: '#00E5FF', stopOpacity: 0.05 })
+                )
+              ),
+              e(CartesianGrid, { strokeDasharray: '3 3', stroke: '#14284E', vertical: false }),
+              e(XAxis, {
+                dataKey: 'dateLabel',
+                stroke: '#566882',
+                tick: { fill: '#8F9CAE', fontSize: 10, fontWeight: 600 },
+                axisLine: { stroke: '#1E3A70' }
+              }),
+              e(YAxis, {
+                stroke: '#566882',
+                tick: { fill: '#8F9CAE', fontSize: 10 },
+                axisLine: { stroke: '#1E3A70' },
+                tickFormatter: (val) => `₹${Math.round(val / 1000)}k`
+              }),
+              e(Tooltip, { content: e(CustomTooltip) }),
+              avgIncome > 0 ? e(ReferenceLine, {
+                y: avgIncome,
+                stroke: '#FFD600',
+                strokeDasharray: '4 4',
+                label: { value: 'Avg', fill: '#FFD600', fontSize: 9, position: 'insideTopRight' }
+              }) : null,
+              e(Area, {
+                type: 'monotone',
+                dataKey: 'income',
+                stroke: '#00E5FF',
+                strokeWidth: 2.5,
+                fillOpacity: 1,
+                fill: 'url(#cyanIncomeGrad)',
+                activeDot: { r: 6, fill: '#FFD600', stroke: '#070D1E', strokeWidth: 2 }
+              })
+            )
+          );
+
+          if (!window.__rechartsIncomeRoot) {
+            container.innerHTML = '';
+            window.__rechartsIncomeRoot = window.ReactDOM.createRoot(container);
+          }
+          window.__rechartsIncomeRoot.render(chartElement);
+          return;
+        } catch (e) {
+          console.warn('Recharts render issue, switching to high-fidelity SVG render:', e);
+        }
+      }
+
+      // Standalone High-Fidelity SVG Renderer (Ultra-fast, zero-dependency offline fallback)
+      renderSvgIncomeTrend(container, chartData, avgIncome, maxIncome);
+    }
+
+    function renderSvgIncomeTrend(container, data, avgIncome, maxIncome) {
+      const width = container.clientWidth || 460;
+      const height = 210;
+      const padding = { top: 20, right: 20, bottom: 30, left: 45 };
+      const chartW = width - padding.left - padding.right;
+      const chartH = height - padding.top - padding.bottom;
+
+      const yMax = Math.max(maxIncome * 1.15, 10000);
+      const points = data.map((d, i) => {
+        const x = padding.left + (data.length > 1 ? (i / (data.length - 1)) * chartW : chartW / 2);
+        const y = padding.top + chartH - (d.income / yMax) * chartH;
+        return { x, y, ...d };
+      });
+
+      let pathD = `M ${points[0].x} ${points[0].y}`;
+      for (let i = 1; i < points.length; i++) {
+        const prev = points[i - 1];
+        const curr = points[i];
+        const cpX1 = prev.x + (curr.x - prev.x) / 2;
+        const cpX2 = cpX1;
+        pathD += ` C ${cpX1} ${prev.y}, ${cpX2} ${curr.y}, ${curr.x} ${curr.y}`;
+      }
+
+      const areaD = `${pathD} L ${points[points.length - 1].x} ${padding.top + chartH} L ${points[0].x} ${padding.top + chartH} Z`;
+      const avgY = padding.top + chartH - (avgIncome / yMax) * chartH;
+
+      let circles = '';
+      points.forEach(p => {
+        circles += `
+          <g class="chart-point" data-income="${p.income}" data-date="${p.dateLabel}" style="cursor: pointer;">
+            <circle cx="${p.x}" cy="${p.y}" r="4" fill="#00E5FF" stroke="#0B172E" stroke-width="2"/>
+            <circle cx="${p.x}" cy="${p.y}" r="12" fill="transparent"/>
+            <title>${p.dateLabel}: ₹${p.income.toLocaleString('en-IN')}</title>
+          </g>
+        `;
+      });
+
+      let xLabels = '';
+      points.forEach(p => {
+        xLabels += `<text x="${p.x}" y="${height - 10}" fill="#8F9CAE" font-size="10" text-anchor="middle">${p.dateLabel}</text>`;
+      });
+
+      container.innerHTML = `
+        <svg width="100%" height="${height}" viewBox="0 0 ${width} ${height}" style="overflow: visible;">
+          <defs>
+            <linearGradient id="svgIncomeGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#00E5FF" stop-opacity="0.5"/>
+              <stop offset="100%" stop-color="#00E5FF" stop-opacity="0.02"/>
+            </linearGradient>
+          </defs>
+          <!-- Grid Lines -->
+          <line x1="${padding.left}" y1="${padding.top}" x2="${width - padding.right}" y2="${padding.top}" stroke="#14284E" stroke-dasharray="3 3"/>
+          <line x1="${padding.left}" y1="${padding.top + chartH / 2}" x2="${width - padding.right}" y2="${padding.top + chartH / 2}" stroke="#14284E" stroke-dasharray="3 3"/>
+          <line x1="${padding.left}" y1="${padding.top + chartH}" x2="${width - padding.right}" y2="${padding.top + chartH}" stroke="#1E3A70"/>
+          
+          <!-- Y Labels -->
+          <text x="${padding.left - 8}" y="${padding.top + 4}" fill="#8F9CAE" font-size="9" text-anchor="end">₹${Math.round(yMax / 1000)}k</text>
+          <text x="${padding.left - 8}" y="${padding.top + chartH / 2 + 4}" fill="#8F9CAE" font-size="9" text-anchor="end">₹${Math.round(yMax / 2000)}k</text>
+          <text x="${padding.left - 8}" y="${padding.top + chartH + 4}" fill="#8F9CAE" font-size="9" text-anchor="end">₹0</text>
+          
+          <!-- Area & Line -->
+          <path d="${areaD}" fill="url(#svgIncomeGrad)"/>
+          <path d="${pathD}" fill="none" stroke="#00E5FF" stroke-width="2.5"/>
+
+          <!-- Average Reference Line -->
+          ${avgIncome > 0 ? `
+            <line x1="${padding.left}" y1="${avgY}" x2="${width - padding.right}" y2="${avgY}" stroke="#FFD600" stroke-dasharray="4 4" stroke-width="1.2"/>
+            <text x="${width - padding.right}" y="${avgY - 4}" fill="#FFD600" font-size="9" text-anchor="end">Avg ₹${avgIncome.toLocaleString('en-IN')}</text>
+          ` : ''}
+
+          <!-- Points -->
+          ${circles}
+          <!-- X Labels -->
+          ${xLabels}
+        </svg>
+      `;
+    }
+
+    function deleteDuty(id) {
+      if (confirm('Delete this duty record?')) {
+        let duties = JSON.parse(localStorage.getItem(STORAGE_KEY_DUTIES) || '[]');
+        duties = duties.filter(d => d.id !== id);
+        localStorage.setItem(STORAGE_KEY_DUTIES, JSON.stringify(duties));
+        showToast('Record deleted.');
         renderDutyTable();
       }
     }
 
-    // --- Official PDF Print Engine ---
-    function printOfficialDutySheet() {
-      const currentUser = getCurrentUser();
-      const monthFilter = document.getElementById('report-month-filter').value || 'All Time';
-      const duties = getDuties().filter(d => 
-        d.userEmpId === currentUser.employeeId &&
-        (!monthFilter || d.date.startsWith(monthFilter))
-      );
-
-      let totalKm = duties.reduce((acc, d) => acc + (d.totalKm || 0), 0);
-      let totalIncome = duties.reduce((acc, d) => acc + (d.income || 0), 0);
-
-      const printWindow = window.open('', '_blank');
-      printWindow.document.write(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <title>UPSRTC Official Monthly Duty Sheet - ${currentUser.fullName}</title>
-          <style>
-            body { font-family: Arial, sans-serif; margin: 30px; color: #000; }
-            .header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px; }
-            .header h1 { margin: 0; font-size: 22px; text-transform: uppercase; }
-            .header h2 { margin: 5px 0; font-size: 15px; }
-            .info-grid { display: grid; grid-template-columns: 1fr 1fr; margin-bottom: 20px; font-size: 13px; line-height: 1.6; }
-            table { width: 100%; border-collapse: collapse; margin-bottom: 25px; }
-            th, td { border: 1px solid #333; padding: 7px 10px; text-align: center; font-size: 12px; }
-            th { background-color: #f2f2f2; font-weight: bold; }
-            .summary-box { float: right; width: 280px; font-size: 13px; line-height: 1.8; margin-bottom: 40px; }
-            .signatures { clear: both; display: flex; justify-content: space-between; padding-top: 50px; font-size: 13px; }
-            .sig-line { border-top: 1px solid #000; width: 180px; text-align: center; padding-top: 5px; }
-          </style>
-        </head>
-        <body>
-          <div class="header">
-            <h1>Uttar Pradesh State Road Transport Corporation (UPSRTC)</h1>
-            <h2>OFFICIAL MONTHLY CREW DUTY & REVENUE REPORT - ${monthFilter}</h2>
-          </div>
-
-          <div class="info-grid">
-            <div>
-              <strong>Staff Name:</strong> ${currentUser.fullName}<br>
-              <strong>Employee ID / CND:</strong> ${currentUser.employeeId}<br>
-              <strong>Designation:</strong> ${currentUser.employeeType} (${currentUser.designation})
-            </div>
-            <div style="text-align: right;">
-              <strong>Depot:</strong> ${currentUser.depot}<br>
-              <strong>Depot Code:</strong> ${currentUser.depotCode || 'N/A'}<br>
-              <strong>Generated On:</strong> ${new Date().toLocaleDateString('en-GB')}
-            </div>
-          </div>
-
-          <table>
-            <thead>
-              <tr>
-                <th>Sr</th>
-                <th>Duty Date</th>
-                <th>Duty No</th>
-                <th>Bus No</th>
-                <th>Route From - To</th>
-                <th>Total KM</th>
-                <th>Passengers</th>
-                <th>Income (₹)</th>
-                <th>Load Factor</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${duties.map((d, index) => `
-                <tr>
-                  <td>${index + 1}</td>
-                  <td>${d.date}</td>
-                  <td>${d.dutyNumber}</td>
-                  <td>${d.busNumber}</td>
-                  <td>${d.routeFrom} - ${d.routeTo}</td>
-                  <td>${d.totalKm}</td>
-                  <td>${d.passengers}</td>
-                  <td>₹${d.income}</td>
-                  <td>${d.loadFactor}%</td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-
-          <div class="summary-box">
-            <div><strong>Total Duties:</strong> ${duties.length} days</div>
-            <div><strong>Total Kilometers:</strong> ${totalKm} KM</div>
-            <div><strong>Total Collections:</strong> ₹${totalIncome.toLocaleString('en-IN')}</div>
-          </div>
-
-          <div class="signatures">
-            <div class="sig-line">Crew Signature (${currentUser.employeeId})</div>
-            <div class="sig-line">Station Incharge / TI</div>
-            <div class="sig-line">Depot Manager (Sohrab Gate)</div>
-          </div>
-        </body>
-        </html>
-      `);
-      printWindow.document.close();
-      printWindow.focus();
-      setTimeout(() => { printWindow.print(); }, 400);
-    }
-
-    // --- CSV Export Engine ---
     function exportDataCSV() {
-      const currentUser = getCurrentUser();
-      const duties = getDuties().filter(d => d.userEmpId === currentUser.employeeId);
-      if (duties.length === 0) {
-        alert('No duty records to export.');
+      const user = getCurrentUser();
+      const allDuties = JSON.parse(localStorage.getItem(STORAGE_KEY_DUTIES) || '[]');
+      const userDuties = allDuties.filter(d => d.userId === user.id || d.employeeId === user.employeeId);
+
+      if (userDuties.length === 0) {
+        alert('No duty records found to export!');
         return;
       }
 
-      let csv = 'Date,Duty No,Shift,Bus No,From,To,Dep Time,Arr Time,Total KM,Passengers,Load Factor,Income,Remarks\n';
-      duties.forEach(d => {
-        csv += `"${d.date}","${d.dutyNumber}","${d.shift}","${d.busNumber}","${d.routeFrom}","${d.routeTo}","${d.depTime}","${d.arrTime}","${d.totalKm}","${d.passengers}","${d.loadFactor}%","${d.income}","${d.remarks || ''}"\n`;
+      let csv = 'Date,Duty No,Shift,Bus No,From,To,Departure,Arrival,Opening KM,Closing KM,Total KM,Passengers,Seats,Load Factor %,Income INR,Expenses INR,Remarks\n';
+      userDuties.forEach(d => {
+        csv += `"${d.dutyDate}","${d.dutyNumber}","${d.shift}","${d.busNumber}","${d.routeFrom}","${d.routeTo}","${d.departureTime}","${d.arrivalTime}",${d.openingKm},${d.closingKm},${d.totalKm},${d.passengerCount},${d.totalSeats},"${d.loadFactor}%",${d.income},${d.expenses},"${d.remarks || ''}"\n`;
       });
 
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const blob = new Blob([csv], { type: 'text/csv' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `UPSRTC_Duty_Report_${currentUser.employeeId.replace(/\s+/g, '_')}.csv`;
+      a.download = `UPSRTC_Duty_Logs_${user.employeeId}.csv`;
       a.click();
       URL.revokeObjectURL(url);
     }
 
-    // --- Profile Management & Photo Upload ---
-    function populateProfileScreen() {
+    // -------------------------------------------------------------
+    // Printable Official PDF Crew Sheet
+    // -------------------------------------------------------------
+    function printDutySheet() {
+      const user = getCurrentUser();
+      const filterMonth = document.getElementById('report-month-filter').value;
+      const allDuties = JSON.parse(localStorage.getItem(STORAGE_KEY_DUTIES) || '[]');
+      const filtered = allDuties.filter(d => 
+        (d.userId === user.id || d.employeeId === user.employeeId) &&
+        (!filterMonth || d.dutyDate.startsWith(filterMonth))
+      );
+
+      let rows = '';
+      let sumKm = 0, sumIncome = 0;
+      filtered.forEach((d, idx) => {
+        sumKm += (d.totalKm || 0);
+        sumIncome += (d.income || 0);
+        rows += `
+          <tr>
+            <td>${idx + 1}</td>
+            <td>${d.dutyDate}</td>
+            <td>${d.busNumber}</td>
+            <td>${d.routeFrom} - ${d.routeTo}</td>
+            <td>${d.departureTime} / ${d.arrivalTime}</td>
+            <td>${d.totalKm}</td>
+            <td>${d.passengerCount} (${d.loadFactor}%)</td>
+            <td>₹${d.income}</td>
+          </tr>
+        `;
+      });
+
+      const printHtml = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>UPSRTC Duty Log Sheet</title>
+          <style>
+            body { font-family: sans-serif; padding: 20px; color: #000; }
+            .header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 15px; }
+            .title { font-size: 18px; font-weight: bold; }
+            .meta { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 12px; }
+            table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+            th, td { border: 1px solid #444; padding: 6px; font-size: 11px; text-align: left; }
+            th { background-color: #EEE; }
+            .sign { margin-top: 40px; display: flex; justify-content: space-between; font-size: 12px; font-weight: bold; }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <div class="title">UTTAR PRADESH STATE ROAD TRANSPORT CORPORATION</div>
+            <div>CREW MONTHLY DUTY PERFORMANCE LOG SHEET</div>
+          </div>
+          <div class="meta">
+            <div><strong>Staff:</strong> ${user.fullName} (${user.employeeId})</div>
+            <div><strong>Depot:</strong> ${user.depot}</div>
+            <div><strong>Month:</strong> ${filterMonth || 'All Records'}</div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Date</th>
+                <th>Bus No</th>
+                <th>Route</th>
+                <th>Dep/Arr</th>
+                <th>KM</th>
+                <th>Pax (LF)</th>
+                <th>Income (₹)</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+            <tfoot>
+              <tr style="font-weight: bold; background: #FAFAFA;">
+                <td colspan="5" style="text-align: right;">TOTAL:</td>
+                <td>${sumKm} KM</td>
+                <td>-</td>
+                <td>₹${sumIncome}</td>
+              </tr>
+            </tfoot>
+          </table>
+          <div class="sign">
+            <div>Conductor/Driver Signature</div>
+            <div>Station In-Charge Signature</div>
+          </div>
+        </body>
+        </html>
+      `;
+
+      const w = window.open('', '_blank');
+      w.document.write(printHtml);
+      w.document.close();
+      w.focus();
+      setTimeout(() => {
+        w.print();
+        w.close();
+      }, 500);
+    }
+
+    // -------------------------------------------------------------
+    // Profile & Photo Upload
+    // -------------------------------------------------------------
+    function populateProfileForm() {
       const user = getCurrentUser();
       if (!user) return;
 
-      document.getElementById('prof-name').value = user.fullName || '';
+      document.getElementById('prof-name').value = user.fullName;
       document.getElementById('prof-mobile').value = user.mobile || '';
       document.getElementById('prof-dob').value = user.dob || '';
       document.getElementById('prof-depot').value = user.depot || '';
       document.getElementById('prof-depot-code').value = user.depotCode || '';
       document.getElementById('prof-designation').value = user.designation || '';
 
-      const imgEl = document.getElementById('profile-edit-avatar-img');
-      const svgEl = document.getElementById('profile-edit-avatar-svg');
-      if (user.photoUrl) {
-        imgEl.src = user.photoUrl;
-        imgEl.style.display = 'block';
-        svgEl.style.display = 'none';
+      const editImg = document.getElementById('profile-edit-avatar-img');
+      const editSvg = document.getElementById('profile-edit-avatar-svg');
+      if (user.photoUrl && user.photoUrl.trim() !== '') {
+        editImg.src = user.photoUrl;
+        editImg.style.display = 'block';
+        editSvg.style.display = 'none';
       } else {
-        imgEl.style.display = 'none';
-        svgEl.style.display = 'block';
+        editImg.style.display = 'none';
+        editSvg.style.display = 'block';
       }
     }
 
-    function handlePhotoUpload(e) {
-      const file = e.target.files[0];
+    function handlePhotoUpload(event) {
+      const file = event.target.files[0];
       if (!file) return;
 
       const reader = new FileReader();
-      reader.onload = function(evt) {
-        const base64Photo = evt.target.result;
+      reader.onload = function(e) {
+        const base64Photo = e.target.result;
         const user = getCurrentUser();
         if (user) {
           user.photoUrl = base64Photo;
           setCurrentUser(user);
-
-          // Update users storage
-          const users = getUsers();
-          const idx = users.findIndex(u => u.employeeId === user.employeeId);
-          if (idx !== -1) {
-            users[idx].photoUrl = base64Photo;
-            saveUsers(users);
-          }
-
-          populateProfileScreen();
-          loadDashboard(user);
-          showToast('Photo updated successfully!');
+          updateUserInDatabase(user);
+          populateProfileForm();
+          showToast('Profile photo updated!');
         }
       };
       reader.readAsDataURL(file);
     }
 
-    function handleProfileUpdate(e) {
-      e.preventDefault();
+    function handleProfileUpdate(event) {
+      event.preventDefault();
       const user = getCurrentUser();
       if (!user) return;
 
       user.fullName = document.getElementById('prof-name').value.trim();
       user.mobile = document.getElementById('prof-mobile').value.trim();
       user.dob = document.getElementById('prof-dob').value;
-      user.depot = document.getElementById('prof-depot').value.trim().toUpperCase();
+      user.depot = document.getElementById('prof-depot').value.trim();
       user.depotCode = document.getElementById('prof-depot-code').value.trim();
       user.designation = document.getElementById('prof-designation').value.trim();
 
       setCurrentUser(user);
-      const users = getUsers();
-      const idx = users.findIndex(u => u.employeeId === user.employeeId);
-      if (idx !== -1) {
-        users[idx] = user;
-        saveUsers(users);
-      }
-
-      loadDashboard(user);
-      showToast('Profile updated successfully!');
+      updateUserInDatabase(user);
+      showToast('Profile saved successfully!');
     }
 
-    function handleChangePassword(e) {
-      e.preventDefault();
+    function handlePasswordChange(event) {
+      event.preventDefault();
+      const user = getCurrentUser();
+      if (!user) return;
+
       const newPass = document.getElementById('prof-new-pass').value;
-      if (newPass.length < 6) {
-        alert('Password must be at least 6 characters.');
-        return;
+      user.password = newPass;
+      setCurrentUser(user);
+      updateUserInDatabase(user);
+      document.getElementById('prof-new-pass').value = '';
+      showToast('Password changed successfully!');
+    }
+
+    function updateUserInDatabase(user) {
+      const users = JSON.parse(localStorage.getItem(STORAGE_KEY_USERS) || '[]');
+      const index = users.findIndex(u => u.id === user.id || u.employeeId === user.employeeId);
+      if (index !== -1) {
+        users[index] = user;
+        localStorage.setItem(STORAGE_KEY_USERS, JSON.stringify(users));
       }
+    }
+
+    // -------------------------------------------------------------
+    // Toast Helper
+    // -------------------------------------------------------------
+    function showToast(text) {
+      const toast = document.getElementById('toast-msg');
+      toast.textContent = text;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    // -------------------------------------------------------------
+    // App Bootstrap
+    // -------------------------------------------------------------
+    window.addEventListener('DOMContentLoaded', () => {
+      initializeStorage();
+      updateLiveClock();
 
       const user = getCurrentUser();
       if (user) {
-        user.password = newPass;
-        setCurrentUser(user);
-
-        const users = getUsers();
-        const idx = users.findIndex(u => u.employeeId === user.employeeId);
-        if (idx !== -1) {
-          users[idx].password = newPass;
-          saveUsers(users);
-        }
-
-        document.getElementById('change-pass-form').reset();
-        showToast('Password updated successfully!');
+        navigateTo('screen-dashboard');
+      } else {
+        navigateTo('screen-login');
       }
-    }
-
-    // --- Admin Settings & Backup Handlers ---
-    function populateAdminScreen() {
-      const s = getSettings();
-      document.getElementById('admin-url-payslip').value = s.paySlip || '';
-      document.getElementById('admin-url-pf').value = s.pf || '';
-      document.getElementById('admin-url-challan').value = s.challan || '';
-      document.getElementById('admin-url-manav').value = s.manav || '';
-    }
-
-    function handleSavePortalSettings(e) {
-      e.preventDefault();
-      const updated = {
-        paySlip: document.getElementById('admin-url-payslip').value.trim(),
-        pf: document.getElementById('admin-url-pf').value.trim(),
-        challan: document.getElementById('admin-url-challan').value.trim(),
-        manav: document.getElementById('admin-url-manav').value.trim()
-      };
-      localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(updated));
-      showToast('Portal URLs updated successfully!');
-    }
-
-    function backupDatabaseJSON() {
-      const backup = {
-        users: getUsers(),
-        duties: getDuties(),
-        settings: getSettings(),
-        exportedAt: new Date().toISOString()
-      };
-      const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `UPSRTC_Portal_Backup_${new Date().toISOString().slice(0,10)}.json`;
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    function restoreDatabaseJSON(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function(evt) {
-        try {
-          const data = JSON.parse(evt.target.result);
-          if (data.users && data.duties) {
-            saveUsers(data.users);
-            saveDuties(data.duties);
-            if (data.settings) localStorage.setItem(STORAGE_KEY_SETTINGS, JSON.stringify(data.settings));
-            alert('Database restored successfully! The page will now reload.');
-            window.location.reload();
-          } else {
-            alert('Invalid backup file format.');
-          }
-        } catch (err) {
-          alert('Failed to parse backup file: ' + err.message);
-        }
-      };
-      reader.readAsText(file);
-    }
+    });
   </script>
 </body>
 </html>
