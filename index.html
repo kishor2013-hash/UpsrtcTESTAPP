@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="hi">
 <head>
@@ -350,7 +349,7 @@ button,input,select,textarea{
   align-items:center;
   justify-content:center;
   background:radial-gradient(circle at center,var(--card-glow) 0%,#0A1528 100%);
-  border:1px solid var(--card-theme)
+  border:1px solid var(--card-theme);
 }
 
 .deck-card-icon-box svg{
@@ -440,21 +439,21 @@ button,input,select,textarea{
 
 .footer-branding{
   text-align:center;
-  padding:24px 16px 12px;
+  padding:24px 16px 14px;
   margin-top:auto
 }
 
 .footer-line-1{
-  color:#7B8FA6;
-  font-size:11px;
-  font-weight:700;
+  color:var(--cyan);
+  font-size:12px;
+  font-weight:800;
   letter-spacing:.8px
 }
 
 .footer-line-2{
-  color:#3E5168;
-  font-size:9.5px;
-  margin-top:4px;
+  color:#6C839F;
+  font-size:10px;
+  margin-top:5px;
   letter-spacing:.3px
 }
 
@@ -507,7 +506,7 @@ button,input,select,textarea{
   gap:10px
 }
 
-/* MOBILE FRIENDLY FEED DUTY ONLY */
+/* MOBILE FRIENDLY FEED DUTY LAYOUT */
 #screen-feed-duty .feed-duty-card{
   margin:0 12px;
   padding:16px 14px;
@@ -518,7 +517,7 @@ button,input,select,textarea{
 }
 
 #screen-feed-duty .feed-section{
-  padding:10px 0 2px;
+  padding:10px 0 4px;
   margin-bottom:10px;
   border-bottom:1px solid var(--border-subtle)
 }
@@ -576,7 +575,7 @@ button,input,select,textarea{
   line-height:1.4
 }
 
-/* MANUAL ENTRY */
+/* MANUAL ENTRY MODAL */
 .manual-entry-wrap{
   display:flex;
   align-items:center;
@@ -1020,7 +1019,7 @@ button,input,select,textarea{
       <div class="icon-action-btn btn-profile" onclick="navigateTo('screen-profile')" title="Profile & Settings">
 
         <svg style="width:20px;height:20px" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.13-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/>
+          <path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/>
         </svg>
 
       </div>
@@ -1066,7 +1065,7 @@ button,input,select,textarea{
       <div class="deck-card-title">FEED DUTY</div>
 
       <div class="deck-card-desc">
-        Bus, route, KM, passengers, load factor & income entry.
+        Bus, route, KM, load factor, eDuties & income entry.
       </div>
 
       <div class="deck-card-action-pill">
@@ -1093,7 +1092,7 @@ button,input,select,textarea{
       <div class="deck-card-title">SHOW DATA</div>
 
       <div class="deck-card-desc">
-        Monthly records, calculations and printable report.
+        Monthly records, eDuties calculations and printable report.
       </div>
 
       <div class="deck-card-action-pill">
@@ -1109,7 +1108,7 @@ button,input,select,textarea{
 
         <div class="deck-card-icon-box">
           <svg viewBox="0 0 24 24" stroke-width="2">
-            <path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.11.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5 1.5 1.5 1.5z"/>
+            <path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.11.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
           </svg>
         </div>
 
@@ -1215,10 +1214,10 @@ button,input,select,textarea{
 
   <footer class="footer-branding">
     <div class="footer-line-1">
-      GROFASTO DIGITAL SOLUTIONS • SECURE CLOUD GATEWAY
+      GROFASTO DIGITAL SOLUTIONS • 9457690255
     </div>
     <div class="footer-line-2">
-      UP STATE ROAD TRANSPORT CORPORATION • CREW LOG
+      UP STATE ROAD TRANSPORT CORPORATION • OFFICIAL CREW LOG
     </div>
   </footer>
 
@@ -1239,7 +1238,7 @@ button,input,select,textarea{
         FEED DUTY ENTRY
       </h2>
       <p style="color:var(--text-gray);font-size:10.5px;margin-top:2px">
-        Record Daily Bus Route, KM, Load Factor & Income
+        Record Daily Bus Route, KM, eDuties & Income Logs
       </p>
     </div>
 
@@ -1254,22 +1253,19 @@ button,input,select,textarea{
       <div class="feed-section">
 
         <div class="feed-section-title" style="color:var(--cyan)">
-          1. DUTY DATE
+          1. DUTY DATE & SHIFT COUNT
         </div>
 
-        <div class="form-group">
+        <div class="input-row">
+          <div class="form-group">
+            <label class="form-label">Duty Date *</label>
+            <input type="date" id="duty-date" class="form-input" required>
+          </div>
 
-          <label class="form-label">
-            Duty Date *
-          </label>
-
-          <input
-            type="date"
-            id="duty-date"
-            class="form-input"
-            required
-          >
-
+          <div class="form-group">
+            <label class="form-label">eDuties (Shift Count) *</label>
+            <input type="number" id="duty-count" class="form-input" placeholder="e.g. 1, 1.5, 2" min="0.5" step="0.5" value="1" required>
+          </div>
         </div>
 
         <div class="feed-date-buttons">
@@ -1304,38 +1300,16 @@ button,input,select,textarea{
           2. BUS & ROUTE
         </div>
 
-        <div class="form-group">
+        <div class="input-row">
+          <div class="form-group">
+            <label class="form-label">Bus Number *</label>
+            <input type="text" id="duty-bus" class="form-input" placeholder="e.g. UP15BT4210" autocomplete="off" required>
+          </div>
 
-          <label class="form-label">
-            Bus Number *
-          </label>
-
-          <input
-            type="text"
-            id="duty-bus"
-            class="form-input"
-            placeholder="Enter bus number"
-            autocomplete="off"
-            required
-          >
-
-        </div>
-
-        <div class="form-group">
-
-          <label class="form-label">
-            Route *
-          </label>
-
-          <input
-            type="text"
-            id="duty-route"
-            class="form-input"
-            placeholder="Meerut - Delhi ISBT"
-            autocomplete="off"
-            required
-          >
-
+          <div class="form-group">
+            <label class="form-label">Route *</label>
+            <input type="text" id="duty-route" class="form-input" placeholder="Meerut - Delhi ISBT" autocomplete="off" required>
+          </div>
         </div>
 
       </div>
@@ -1345,81 +1319,29 @@ button,input,select,textarea{
       <div class="feed-section">
 
         <div class="feed-section-title" style="color:var(--green)">
-          3. DUTY DATA
+          3. DUTY DATA & REVENUE
+        </div>
+
+        <div class="input-row">
+          <div class="form-group">
+            <label class="form-label">Kilometer *</label>
+            <input type="number" id="duty-total-km" class="form-input" placeholder="Total KM" min="0" step="0.1" inputmode="decimal" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Load Factor % *</label>
+            <input type="number" id="duty-load-factor" class="form-input" placeholder="LF %" min="0" max="100" step="0.1" inputmode="decimal" required>
+          </div>
         </div>
 
         <div class="form-group">
-
-          <label class="form-label">
-            Kilometer *
-          </label>
-
-          <input
-            type="number"
-            id="duty-total-km"
-            class="form-input"
-            placeholder="Enter kilometer"
-            min="0"
-            step="0.1"
-            inputmode="decimal"
-            required
-          >
-
+          <label class="form-label">Total Income (₹) *</label>
+          <input type="number" id="duty-income" class="form-input" placeholder="Enter income in ₹" min="0" step="0.01" inputmode="decimal" required>
         </div>
 
         <div class="form-group">
-
-          <label class="form-label">
-            Load Factor *
-          </label>
-
-          <input
-            type="number"
-            id="duty-load-factor"
-            class="form-input"
-            placeholder="Enter load factor %"
-            min="0"
-            max="100"
-            step="0.1"
-            inputmode="decimal"
-            required
-          >
-
-        </div>
-
-        <div class="form-group">
-
-          <label class="form-label">
-            Income (₹) *
-          </label>
-
-          <input
-            type="number"
-            id="duty-income"
-            class="form-input"
-            placeholder="Enter income"
-            min="0"
-            step="0.01"
-            inputmode="decimal"
-            required
-          >
-
-        </div>
-
-        <div class="form-group">
-
-          <label class="form-label">
-            Remarks
-          </label>
-
-          <input
-            type="text"
-            id="duty-remarks"
-            class="form-input"
-            placeholder="Enter remark"
-            autocomplete="off"
-          >
-
+          <label class="form-label">Remarks</label>
+          <input type="text" id="duty-remarks" class="form-input" placeholder="Optional remark" autocomplete="off">
         </div>
 
       </div>
@@ -1525,7 +1447,7 @@ button,input,select,textarea{
     <div style="background:#0B172E;border:1px solid var(--cyan);border-radius:var(--radius-sm);padding:8px 4px;text-align:center">
 
       <div style="font-size:9px;color:var(--text-gray)">
-        Duties
+        eDuties
       </div>
 
       <div id="kpi-duties" style="font-size:16px;font-weight:800;color:var(--cyan);margin-top:2px">
@@ -1578,13 +1500,14 @@ button,input,select,textarea{
 
   <div style="margin:0 12px;background:#0B172E;border:1.2px solid var(--border-blue);border-radius:var(--radius-lg);overflow-x:auto">
 
-    <table style="width:100%;border-collapse:collapse;text-align:left;font-size:11px;min-width:650px">
+    <table style="width:100%;border-collapse:collapse;text-align:left;font-size:11px;min-width:720px">
 
       <thead>
 
         <tr style="background:#091730;border-bottom:1.5px solid var(--border-blue);color:var(--cyan)">
 
           <th style="padding:10px 8px">Date</th>
+          <th style="padding:10px 8px">eDuties</th>
           <th style="padding:10px 8px">Bus</th>
           <th style="padding:10px 8px">Route</th>
           <th style="padding:10px 8px">KM</th>
@@ -1807,130 +1730,53 @@ button,input,select,textarea{
 
     <form id="manual-duty-form" onsubmit="handleManualDutySubmit(event)">
 
-      <div class="form-group">
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">Duty Date *</label>
+          <input type="date" id="manual-duty-date" class="form-input" required>
+        </div>
 
-        <label class="form-label">
-          Duty Date *
-        </label>
-
-        <input
-          type="date"
-          id="manual-duty-date"
-          class="form-input"
-          required
-        >
-
+        <div class="form-group">
+          <label class="form-label">eDuties (Shift Count) *</label>
+          <input type="number" id="manual-duty-count" class="form-input" placeholder="e.g. 1" min="0.5" step="0.5" value="1" required>
+        </div>
       </div>
 
 
       <div class="form-group">
-
-        <label class="form-label">
-          Bus Number *
-        </label>
-
-        <input
-          type="text"
-          id="manual-duty-bus"
-          class="form-input"
-          placeholder="Enter bus number"
-          required
-        >
-
+        <label class="form-label">Bus Number *</label>
+        <input type="text" id="manual-duty-bus" class="form-input" placeholder="Enter bus number" required>
       </div>
 
 
       <div class="form-group">
+        <label class="form-label">Route *</label>
+        <input type="text" id="manual-duty-route" class="form-input" placeholder="Meerut - Delhi ISBT" required>
+      </div>
 
-        <label class="form-label">
-          Route *
-        </label>
 
-        <input
-          type="text"
-          id="manual-duty-route"
-          class="form-input"
-          placeholder="Meerut - Delhi ISBT"
-          required
-        >
+      <div class="input-row">
+        <div class="form-group">
+          <label class="form-label">Kilometer *</label>
+          <input type="number" id="manual-duty-total-km" class="form-input" placeholder="Enter kilometer" min="0" step="0.1" inputmode="decimal" required>
+        </div>
 
+        <div class="form-group">
+          <label class="form-label">Load Factor %</label>
+          <input type="number" id="manual-duty-load-factor" class="form-input" placeholder="LF %" min="0" max="100" step="0.1" inputmode="decimal" required>
+        </div>
       </div>
 
 
       <div class="form-group">
-
-        <label class="form-label">
-          Kilometer *
-        </label>
-
-        <input
-          type="number"
-          id="manual-duty-total-km"
-          class="form-input"
-          placeholder="Enter kilometer"
-          min="0"
-          step="0.1"
-          inputmode="decimal"
-          required
-        >
-
+        <label class="form-label">Income ₹ *</label>
+        <input type="number" id="manual-duty-income" class="form-input" placeholder="Enter income" min="0" step="0.01" inputmode="decimal" required>
       </div>
 
 
       <div class="form-group">
-
-        <label class="form-label">
-          Load Factor %
-        </label>
-
-        <input
-          type="number"
-          id="manual-duty-load-factor"
-          class="form-input"
-          placeholder="Enter load factor %"
-          min="0"
-          max="100"
-          step="0.1"
-          inputmode="decimal"
-          required
-        >
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label class="form-label">
-          Income ₹ *
-        </label>
-
-        <input
-          type="number"
-          id="manual-duty-income"
-          class="form-input"
-          placeholder="Enter income"
-          min="0"
-          step="0.01"
-          inputmode="decimal"
-          required
-        >
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label class="form-label">
-          Remarks
-        </label>
-
-        <input
-          type="text"
-          id="manual-duty-remarks"
-          class="form-input"
-          placeholder="Manual entry / old record"
-        >
-
+        <label class="form-label">Remarks</label>
+        <input type="text" id="manual-duty-remarks" class="form-input" placeholder="Manual entry / old record">
       </div>
 
 
@@ -2545,6 +2391,9 @@ function saveDutyDraft(){
 
   const draft={
 
+    dutyCount:
+      document.getElementById('duty-count')?.value||'1',
+
     busNumber:
       document.getElementById('duty-bus')?.value||'',
 
@@ -2587,6 +2436,10 @@ function loadDutyDraft(){
 
     const draft=JSON.parse(raw);
 
+
+    if(document.getElementById('duty-count'))
+      document.getElementById('duty-count').value=
+        draft.dutyCount||'1';
 
     if(document.getElementById('duty-bus'))
       document.getElementById('duty-bus').value=
@@ -2699,6 +2552,9 @@ async function handleDutySubmit(event){
     return;
   }
 
+  const dutyCount=parseFloat(
+    document.getElementById('duty-count').value
+  ) || 1;
 
   const totalKm=parseFloat(
     document.getElementById('duty-total-km').value
@@ -2755,6 +2611,9 @@ async function handleDutySubmit(event){
 
     dutyDate:
       document.getElementById('duty-date').value,
+
+    dutyCount:
+      Number(dutyCount),
 
     busNumber:
       document.getElementById('duty-bus').value.trim(),
@@ -2879,6 +2738,9 @@ async function handleManualDutySubmit(event){
     return;
   }
 
+  const dutyCount=parseFloat(
+    document.getElementById('manual-duty-count').value
+  ) || 1;
 
   const totalKm=parseFloat(
     document.getElementById('manual-duty-total-km').value
@@ -2939,6 +2801,9 @@ async function handleManualDutySubmit(event){
 
     dutyDate:
       document.getElementById('manual-duty-date').value,
+
+    dutyCount:
+      Number(dutyCount),
 
     busNumber:
       document.getElementById('manual-duty-bus').value.trim(),
@@ -3048,6 +2913,8 @@ function renderDutyTable(){
       );
 
 
+  let totalDuties=0;
+
   let totalKm=0;
 
   let totalIncome=0;
@@ -3058,6 +2925,8 @@ function renderDutyTable(){
 
 
   filtered.forEach(d=>{
+
+    totalDuties+=Number(d.dutyCount)||1;
 
     totalKm+=Number(d.totalKm)||0;
 
@@ -3087,7 +2956,7 @@ function renderDutyTable(){
 
 
   document.getElementById('kpi-duties')
-    .textContent=filtered.length;
+    .textContent=totalDuties;
 
 
   document.getElementById('kpi-km')
@@ -3116,7 +2985,7 @@ function renderDutyTable(){
 
     tbody.innerHTML=
       '<tr>'+
-      '<td colspan="7" style="text-align:center;padding:24px;color:var(--text-gray)">'+
+      '<td colspan="8" style="text-align:center;padding:24px;color:var(--text-gray)">'+
       'No duty entries logged for this month.'+
       '</td>'+
       '</tr>';
@@ -3138,6 +3007,10 @@ function renderDutyTable(){
 
       '<td style="padding:10px 8px;color:#FFF;font-weight:600">'+
       escapeHtml(d.dutyDate)+
+      '</td>'+
+
+      '<td style="padding:10px 8px;color:var(--purple);font-weight:800">'+
+      Number(d.dutyCount||1)+
       '</td>'+
 
       '<td style="padding:10px 8px;color:var(--yellow)">'+
@@ -3257,13 +3130,14 @@ function exportDataCSV(){
 
 
   let csv=
-    'Date,Bus No,Route,Total KM,Load Factor %,Income INR,Remarks\n';
+    'Date,eDuties,Bus No,Route,Total KM,Load Factor %,Income INR,Remarks\n';
 
 
   records.forEach(d=>{
 
     csv+=
       `"${String(d.dutyDate||'').replace(/"/g,'""')}",`+
+      `${d.dutyCount||1},`+
       `"${String(d.busNumber||'').replace(/"/g,'""')}",`+
       `"${String(d.route||'').replace(/"/g,'""')}",`+
       `${d.totalKm},`+
@@ -3339,6 +3213,8 @@ function printDutySheet(){
 
   let rows='';
 
+  let sumDuties=0;
+
   let sumKm=0;
 
   let sumIncome=0;
@@ -3349,6 +3225,8 @@ function printDutySheet(){
 
 
   filtered.forEach((d,i)=>{
+
+    sumDuties+=Number(d.dutyCount)||1;
 
     sumKm+=Number(d.totalKm)||0;
 
@@ -3374,6 +3252,8 @@ function printDutySheet(){
       '<td>'+String(i+1)+'</td>'+
 
       '<td>'+escapeHtml(d.dutyDate)+'</td>'+
+
+      '<td>'+Number(d.dutyCount||1)+'</td>'+
 
       '<td>'+escapeHtml(d.busNumber)+'</td>'+
 
@@ -3436,7 +3316,7 @@ body{
 
 .summary{
   display:flex;
-  gap:30px;
+  gap:20px;
   margin:10px 0;
   font-size:12px;
   font-weight:bold
@@ -3514,7 +3394,7 @@ th{
 <div class="summary">
 
   <div>
-    Total Duties: ${filtered.length}
+    Total eDuties: ${sumDuties}
   </div>
 
   <div>
@@ -3539,6 +3419,7 @@ th{
 <tr>
 <th>#</th>
 <th>Date</th>
+<th>eDuties</th>
 <th>Bus No</th>
 <th>Route</th>
 <th>KM</th>
@@ -3559,8 +3440,16 @@ ${rows}
 
 <tr style="font-weight:bold;background:#FAFAFA">
 
-<td colspan="4" style="text-align:right">
+<td colspan="2" style="text-align:right">
 TOTAL / AVERAGE:
+</td>
+
+<td>
+${sumDuties}
+</td>
+
+<td colspan="2">
+-
 </td>
 
 <td>
@@ -3923,6 +3812,7 @@ document.addEventListener(
 
     if([
 
+      'duty-count',
       'duty-bus',
       'duty-route',
       'duty-total-km',
@@ -4006,4 +3896,3 @@ window.addEventListener(
 
 </body>
 </html>
-```
