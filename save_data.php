@@ -1,5 +1,5 @@
 <?php
-// PHP 8.3 में एरर स्क्रीन पर न फेंक कर JSON में दिखाने के लिए
+// PHP 8.3 सुरक्षा और सख्त एरर हैंडलिंग
 mysqli_report(MYSQLI_REPORT_OFF);
 
 header("Access-Control-Allow-Origin: *");
@@ -21,58 +21,18 @@ try {
     $conn = @new mysqli($host, $db_user, $db_pass, $db_name);
 
     if ($conn->connect_error) {
-        http_response_code(200); // 500 से बचने के लिए 200 पर एरर मैसेज भेजें
-        echo json_encode(["status" => "error", "message" => "DB कनेक्शन फेल: " . $conn->connect_error]);
+        http_response_code(200);
+        echo json_encode(["status" => "error", "message" => "Database connection failed: " . $conn->connect_error]);
         exit();
     }
 
     $conn->set_charset("utf8mb4");
 
-    // टेबल्स अगर नहीं बनी हैं तो बना लें
-    $conn->query("CREATE TABLE IF NOT EXISTS users (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        employee_id VARCHAR(50) UNIQUE,
-        full_name VARCHAR(100),
-        email VARCHAR(100),
-        mobile VARCHAR(20),
-        password VARCHAR(255),
-        dob DATE,
-        depot VARCHAR(100),
-        depot_code VARCHAR(50),
-        designation VARCHAR(100),
-        employee_type VARCHAR(50),
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )");
-
-    $conn->query("CREATE TABLE IF NOT EXISTS duties (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        user_id VARCHAR(50),
-        employee_id VARCHAR(50),
-        duty_date DATE,
-        duty_number VARCHAR(50),
-        shift VARCHAR(50),
-        bus_number VARCHAR(50),
-        route_from VARCHAR(100),
-        route_to VARCHAR(100),
-        departure_time VARCHAR(20),
-        arrival_time VARCHAR(20),
-        opening_km FLOAT,
-        closing_km FLOAT,
-        total_km FLOAT,
-        passengers INT,
-        seats INT,
-        load_factor FLOAT,
-        income FLOAT,
-        expenses FLOAT,
-        remarks TEXT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )");
-
     $rawInput = file_get_contents("php://input");
     $input = json_decode($rawInput, true);
 
     if (!$input) {
-        echo json_encode(["status" => "error", "message" => "खाली या अमान्य JSON डेटा मिला"]);
+        echo json_encode(["status" => "error", "message" => "कोई डेटा प्राप्त नहीं हुआ"]);
         exit();
     }
 
@@ -96,13 +56,13 @@ try {
                 ON DUPLICATE KEY UPDATE full_name='$name', password='$pass', mobile='$mobile', depot='$depot'";
 
         if ($conn->query($sql)) {
-            echo json_encode(["status" => "success", "message" => "यूज़र सर्वर डेटाबेस में सेव हो गया"]);
+            echo json_encode(["status" => "success", "message" => "यूज़र सर्वर पर सेव हो गया"]);
         } else {
             echo json_encode(["status" => "error", "message" => "रजिस्ट्रेशन SQL एरर: " . $conn->error]);
         }
     }
 
-    // 2. लॉगिन
+    // 2. लॉगिन वेरिफिकेशन
     else if ($action === 'login_user') {
         $ident = $conn->real_escape_string($input['identifier'] ?? '');
         $pass = $conn->real_escape_string($input['password'] ?? '');
@@ -116,7 +76,7 @@ try {
                 "status" => "success",
                 "message" => "लॉगिन सफल",
                 "user" => [
-                    "id" => 'u_' . $row['id'],
+                    "id" => 'u_' . $row['employee_id'],
                     "employeeId" => $row['employee_id'],
                     "fullName" => $row['full_name'],
                     "email" => $row['email'],
@@ -133,43 +93,58 @@ try {
         }
     }
 
-    // 3. ड्यूटी एंट्री सेव
+    // 3. नई ड्यूटी सेव करना (eDuties / duty_count सहित)
     else if ($action === 'save_duty') {
+        $dutyUniqueId = $conn->real_escape_string($input['id'] ?? ('duty_' . time()));
         $empId = $conn->real_escape_string($input['employeeId'] ?? '');
         $dutyDate = !empty($input['dutyDate']) ? $conn->real_escape_string($input['dutyDate']) : date('Y-m-d');
-        $dutyNum = $conn->real_escape_string($input['dutyNumber'] ?? '');
-        $shift = $conn->real_escape_string($input['shift'] ?? '');
+        $dutyCount = floatval($input['dutyCount'] ?? 1);
         $bus = $conn->real_escape_string($input['busNumber'] ?? '');
-        $from = $conn->real_escape_string($input['routeFrom'] ?? '');
-        $to = $conn->real_escape_string($input['routeTo'] ?? '');
-        $depTime = $conn->real_escape_string($input['departureTime'] ?? '');
-        $arrTime = $conn->real_escape_string($input['arrivalTime'] ?? '');
-        $openKm = floatval($input['openingKm'] ?? 0);
-        $closeKm = floatval($input['closingKm'] ?? 0);
+        $route = $conn->real_escape_string($input['route'] ?? '');
         $totalKm = floatval($input['totalKm'] ?? 0);
-        $pax = intval($input['passengerCount'] ?? 0);
-        $seats = intval($input['totalSeats'] ?? 52);
         $lf = floatval($input['loadFactor'] ?? 0);
         $income = floatval($input['income'] ?? 0);
-        $exp = floatval($input['expenses'] ?? 0);
         $remarks = $conn->real_escape_string($input['remarks'] ?? '');
 
-        $sql = "INSERT INTO duties (employee_id, duty_date, duty_number, shift, bus_number, route_from, route_to, departure_time, arrival_time, opening_km, closing_km, total_km, passengers, seats, load_factor, income, expenses, remarks) 
-                VALUES ('$empId', '$dutyDate', '$dutyNum', '$shift', '$bus', '$from', '$to', '$depTime', '$arrTime', $openKm, $closeKm, $totalKm, $pax, $seats, $lf, $income, $exp, '$remarks')";
+        $sql = "INSERT INTO duties (duty_unique_id, employee_id, duty_date, duty_count, bus_number, route, total_km, load_factor, income, remarks) 
+                VALUES ('$dutyUniqueId', '$empId', '$dutyDate', $dutyCount, '$bus', '$route', $totalKm, $lf, $income, '$remarks')";
 
         if ($conn->query($sql)) {
-            echo json_encode(["status" => "success", "message" => "ड्यूटी Hostinger सर्वर पर सेव हो गई"]);
+            echo json_encode(["status" => "success", "message" => "ड्यूटी सर्वर पर सेव हो गई"]);
         } else {
-            echo json_encode(["status" => "error", "message" => "ड्यूटी SQL एरर: " . $conn->error]);
+            echo json_encode(["status" => "error", "message" => "ड्यूटी सेव एरर: " . $conn->error]);
         }
-    } else {
-        echo json_encode(["status" => "error", "message" => "अमान्य Action मिला"]);
+    }
+
+    // 4. सर्वर से ड्यूटी डिलीट करना
+    else if ($action === 'delete_duty') {
+        $dutyId = $conn->real_escape_string($input['dutyId'] ?? '');
+        $empId = $conn->real_escape_string($input['employeeId'] ?? '');
+
+        $sql = "DELETE FROM duties WHERE (duty_unique_id='$dutyId' OR id='$dutyId') AND employee_id='$empId'";
+        if ($conn->query($sql)) {
+            echo json_encode(["status" => "success", "message" => "ड्यूटी सर्वर से डिलीट कर दी गई"]);
+        } else {
+            echo json_encode(["status" => "error", "message" => "डिलीट फेल: " . $conn->error]);
+        }
+    }
+
+    // 5. किसी खास यूज़र की ड्यूटियाँ लोड करना
+    else if ($action === 'get_user_duties') {
+        $empId = $conn->real_escape_string($input['employeeId'] ?? '');
+        $sql = "SELECT * FROM duties WHERE employee_id='$empId' ORDER BY duty_date DESC";
+        $res = $conn->query($sql);
+        $duties = [];
+        while ($row = $res->fetch_assoc()) {
+            $duties[] = $row;
+        }
+        echo json_encode(["status" => "success", "duties" => $duties]);
     }
 
     $conn->close();
 
 } catch (\Throwable $e) {
-    http_response_code(200); // 500 एरर को दबाकर असली एरर दिखाना
+    http_response_code(200);
     echo json_encode(["status" => "error", "message" => "PHP एरर: " . $e->getMessage()]);
 }
 ?>
