@@ -170,54 +170,65 @@ button,input,select,textarea{font-family:inherit}
   <footer class="footer-branding"><div class="footer-line-1">GROFASTO DIGITAL SOLUTIONS • SECURE CLOUD GATEWAY</div><div class="footer-line-2">UP STATE ROAD TRANSPORT CORPORATION • CREW LOG</div></footer>
 </div>
 
-<!-- FEED DUTY: SINGLE MANUAL TOTAL KM -->
+<!-- FEED DUTY -->
 <div id="screen-feed-duty" class="screen-view">
-  <div style="padding:16px 20px;display:flex;align-items:center;gap:12px"><button class="btn" onclick="navigateTo('screen-dashboard')" style="width:36px;height:36px;background:#0B172E;color:var(--cyan);border:1px solid var(--border-blue)">←</button><div><h2 style="color:var(--cyan);font-size:16px;font-weight:900">FEED DUTY ENTRY</h2><p style="color:var(--text-gray);font-size:11px">Record Daily Bus Route, KM & Income Logs</p></div></div>
+  <div style="padding:16px 20px;display:flex;align-items:center;gap:12px">
+    <button class="btn" onclick="navigateTo('screen-dashboard')" style="width:36px;height:36px;background:#0B172E;color:var(--cyan);border:1px solid var(--border-blue)">←</button>
+    <div>
+      <h2 style="color:var(--cyan);font-size:16px;font-weight:900">FEED DUTY ENTRY</h2>
+      <p style="color:var(--text-gray);font-size:11px">Record Daily Bus Route, KM, Load Factor & Income</p>
+    </div>
+  </div>
+
   <div style="margin:0 16px;padding:20px;background:#0B172E;border:1.2px solid var(--border-blue);border-radius:var(--radius-lg)">
     <form id="feed-duty-form" onsubmit="handleDutySubmit(event)">
-      <div style="color:var(--cyan);font-size:12px;font-weight:800;margin-bottom:8px">1. DUTY DATE & SHIFT</div>
-      <div class="input-row">
-        <div class="form-group"><label class="form-label">Duty Date *</label><input type="date" id="duty-date" class="form-input" required></div>
-        <div class="form-group"><label class="form-label">Duty Number *</label><input type="text" id="duty-num" class="form-input" placeholder="Enter duty no." required></div>
-      </div>
-      <div style="display:flex;gap:8px;margin-top:-6px;margin-bottom:14px"><button type="button" class="btn" onclick="setDutyDateToday()" style="background:rgba(0,229,255,.15);color:var(--cyan);border:1px solid var(--cyan);padding:4px 10px;font-size:11px">Today</button><button type="button" class="btn" onclick="setDutyDateYesterday()" style="background:#091730;color:var(--text-gray);border:1px solid var(--border-blue);padding:4px 10px;font-size:11px">Yesterday</button></div>
-      <div class="input-row">
-        <div class="form-group"><label class="form-label">Shift *</label><select id="duty-shift" class="form-select"><option value="Morning">Morning (प्रातःकालीन)</option><option value="Evening">Evening (सायंकालीन)</option><option value="Night">Night (रात्रि)</option><option value="Double">Double Duty (डबल ड्यूटी)</option></select></div>
-        <div class="form-group"><label class="form-label">Bus Number *</label><input type="text" id="duty-bus" class="form-input" placeholder="Enter bus number" required></div>
-      </div>
 
-      <div style="color:var(--yellow);font-size:12px;font-weight:800;margin:12px 0 8px">2. ROUTE & TIMINGS</div>
-      <div class="input-row">
-        <div class="form-group"><label class="form-label">Route From *</label><input type="text" id="duty-from" class="form-input" placeholder="From" required></div>
-        <div class="form-group"><label class="form-label">Route To *</label><input type="text" id="duty-to" class="form-input" placeholder="To" required></div>
-      </div>
-      <div class="input-row">
-        <div class="form-group"><label class="form-label">Departure Time</label><input type="time" id="duty-dep-time" class="form-input"></div>
-        <div class="form-group"><label class="form-label">Arrival Time</label><input type="time" id="duty-arr-time" class="form-input"></div>
-      </div>
-
-      <div style="color:var(--green);font-size:12px;font-weight:800;margin:12px 0 8px">3. KM & PASSENGERS</div>
+      <div style="color:var(--cyan);font-size:12px;font-weight:800;margin-bottom:8px">1. DUTY DATE</div>
       <div class="form-group">
-        <label class="form-label">Total KM *</label>
-        <input type="number" id="duty-total-km" class="form-input" placeholder="Enter total KM" min="0" step="0.1" required>
+        <label class="form-label">Duty Date *</label>
+        <input type="date" id="duty-date" class="form-input" required>
       </div>
-      <div class="input-row">
-        <div class="form-group"><label class="form-label">Passenger Count</label><input type="number" id="duty-passengers" class="form-input" placeholder="Enter passengers" min="0" step="1" oninput="calculateLoadFactor()"></div>
-        <div class="form-group"><label class="form-label">Total Bus Seats</label><input type="number" id="duty-seats" class="form-input" placeholder="Enter seats" min="1" step="1" oninput="calculateLoadFactor()"></div>
+      <div style="display:flex;gap:8px;margin-top:-6px;margin-bottom:14px">
+        <button type="button" class="btn" onclick="setDutyDateToday()" style="background:rgba(0,229,255,.15);color:var(--cyan);border:1px solid var(--cyan);padding:4px 10px;font-size:11px">Today</button>
+        <button type="button" class="btn" onclick="setDutyDateYesterday()" style="background:#091730;color:var(--text-gray);border:1px solid var(--border-blue);padding:4px 10px;font-size:11px">Yesterday</button>
+      </div>
+
+      <div style="color:var(--yellow);font-size:12px;font-weight:800;margin:12px 0 8px">2. BUS & ROUTE</div>
+      <div class="form-group">
+        <label class="form-label">Bus Number *</label>
+        <input type="text" id="duty-bus" class="form-input" placeholder="Enter bus number" required>
       </div>
       <div class="form-group">
-        <label class="form-label">Load Factor %</label>
-        <input type="text" id="duty-load-factor" class="form-input" style="color:var(--green);font-weight:800" readonly value="0.0%">
-        <small style="color:var(--text-muted);font-size:9.5px;margin-top:4px">Calculation: Passengers ÷ Total Seats × 100</small>
+        <label class="form-label">Route *</label>
+        <input type="text" id="duty-route" class="form-input" placeholder="Enter route e.g. Meerut - Delhi ISBT" required>
       </div>
 
-      <div style="color:var(--red);font-size:12px;font-weight:800;margin:12px 0 8px">4. REVENUE & EXPENSES</div>
-      <div class="input-row">
-        <div class="form-group"><label class="form-label">Total Income (₹) *</label><input type="number" id="duty-income" class="form-input" placeholder="Enter income" min="0" step="0.01" required></div>
-        <div class="form-group"><label class="form-label">Diesel / Expenses (₹)</label><input type="number" id="duty-expenses" class="form-input" placeholder="0" min="0" step="0.01" value="0"></div>
+      <div style="color:var(--green);font-size:12px;font-weight:800;margin:12px 0 8px">3. DUTY DATA</div>
+      <div class="form-group">
+        <label class="form-label">Kilometer *</label>
+        <input type="number" id="duty-total-km" class="form-input" placeholder="Enter kilometer" min="0" step="0.1" required>
       </div>
-      <div class="form-group"><label class="form-label">Remarks</label><input type="text" id="duty-remarks" class="form-input" placeholder="Enter remarks"></div>
+
+      <div class="form-group">
+        <label class="form-label">Load Factor *</label>
+        <input type="number" id="duty-load-factor" class="form-input" placeholder="Enter load factor %" min="0" step="0.1" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Income (₹) *</label>
+        <input type="number" id="duty-income" class="form-input" placeholder="Enter income" min="0" step="0.01" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Remarks</label>
+        <input type="text" id="duty-remarks" class="form-input" placeholder="Enter remark">
+      </div>
+
       <button type="submit" class="btn" style="width:100%;height:48px;background:var(--cyan);color:#070D1E;font-size:14px;margin-top:10px">SAVE DUTY LOG ENTRY</button>
+
+      <div style="margin-top:10px;text-align:center;color:var(--text-muted);font-size:9.5px">
+        Previous entry data will remain available for the next entry.
+      </div>
     </form>
   </div>
 </div>
@@ -225,7 +236,7 @@ button,input,select,textarea{font-family:inherit}
 <!-- REPORTS -->
 <div id="screen-show-data" class="screen-view">
   <div style="padding:16px 20px;display:flex;align-items:center;justify-content:space-between">
-    <div style="display:flex;align-items:center;gap:12px"><button class="btn" onclick="navigateTo('screen-dashboard')" style="width:36px;height:36px;background:#0B172E;color:var(--cyan);border:1px solid var(--border-blue)">←</button><div><h2 style="color:var(--yellow);font-size:16px;font-weight:900">DUTY RECORDS & REPORTS</h2><p style="color:var(--text-gray);font-size:11px">Monthly Verified Calculations & PDF</p></div></div>
+    <div style="display:flex;align-items:center;gap:12px"><button class="btn" onclick="navigateTo('screen-dashboard')" style="width:36px;height:36px;background:#0B172E;color:var(--cyan);border:1px solid var(--border-blue)">←</button><div><h2 style="color:var(--yellow);font-size:16px;font-weight:900">DUTY RECORDS & REPORTS</h2><p style="color:var(--text-gray);font-size:11px">Monthly Duty Summary & PDF</p></div></div>
     <button class="btn" onclick="printDutySheet()" style="background:var(--yellow);color:#070D1E;padding:7px 14px;font-size:11px">🖨️ PDF Print</button>
   </div>
   <div style="margin:0 16px 12px;padding:12px;background:#0B172E;border:1px solid var(--border-blue);border-radius:var(--radius-md);display:flex;align-items:center;gap:10px"><label class="form-label" style="margin-bottom:0;white-space:nowrap">Select Month:</label><input type="month" id="report-month-filter" class="form-input" style="padding:6px 10px;flex:1" onchange="renderDutyTable()"></div>
@@ -274,6 +285,7 @@ const STORAGE_KEY_USER='upsrtc_current_user_v4';
 const STORAGE_KEY_USERS='upsrtc_users_db_v4';
 const STORAGE_KEY_DUTIES='upsrtc_duties_db_v4';
 const STORAGE_KEY_SETTINGS='upsrtc_portal_settings_v4';
+const STORAGE_KEY_DUTY_DRAFT='upsrtc_last_duty_entry_v4';
 
 const defaultPortalUrls={
   paySlip:'https://payroll.mectoi.in/',
@@ -283,7 +295,7 @@ const defaultPortalUrls={
 };
 
 function initializeStorage(){
-  // IMPORTANT: No demo users and no demo duty records are created.
+  // No demo users or demo duty records are created.
   if(!localStorage.getItem(STORAGE_KEY_USERS)) localStorage.setItem(STORAGE_KEY_USERS,'[]');
   if(!localStorage.getItem(STORAGE_KEY_DUTIES)) localStorage.setItem(STORAGE_KEY_DUTIES,'[]');
   if(!localStorage.getItem(STORAGE_KEY_SETTINGS)) localStorage.setItem(STORAGE_KEY_SETTINGS,JSON.stringify(defaultPortalUrls));
@@ -296,7 +308,9 @@ function navigateTo(screenId){
     target.classList.add('active');
     window.scrollTo(0,0);
   }
+
   if(screenId==='screen-dashboard') updateDashboardView();
+
   if(screenId==='screen-show-data'){
     const m=document.getElementById('report-month-filter');
     if(!m.value){
@@ -305,10 +319,11 @@ function navigateTo(screenId){
     }
     renderDutyTable();
   }
+
   if(screenId==='screen-profile') populateProfileForm();
+
   if(screenId==='screen-feed-duty'){
-    const d=document.getElementById('duty-date');
-    if(!d.value) setDutyDateToday();
+    prepareDutyEntryForm();
   }
 }
 
@@ -316,51 +331,88 @@ function updateLiveClock(){
   const now=new Date();
   const clock=document.getElementById('dash-live-time');
   const date=document.getElementById('dash-live-date');
-  if(clock) clock.textContent=[now.getHours(),now.getMinutes(),now.getSeconds()].map(v=>String(v).padStart(2,'0')).join(':');
+
+  if(clock){
+    clock.textContent=[
+      now.getHours(),
+      now.getMinutes(),
+      now.getSeconds()
+    ].map(v=>String(v).padStart(2,'0')).join(':');
+  }
+
   if(date){
     const months=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
     date.textContent=now.getDate()+' '+months[now.getMonth()]+' '+now.getFullYear();
   }
 }
+
 setInterval(updateLiveClock,1000);
 
 function getCurrentUser(){
   const u=localStorage.getItem(STORAGE_KEY_USER);
-  try{return u?JSON.parse(u):null}catch(e){return null}
+  try{
+    return u?JSON.parse(u):null;
+  }catch(e){
+    return null;
+  }
 }
+
 function setCurrentUser(user){
-  if(user) localStorage.setItem(STORAGE_KEY_USER,JSON.stringify(user));
-  else localStorage.removeItem(STORAGE_KEY_USER);
+  if(user){
+    localStorage.setItem(STORAGE_KEY_USER,JSON.stringify(user));
+  }else{
+    localStorage.removeItem(STORAGE_KEY_USER);
+  }
 }
 
 async function handleLoginSubmit(event){
   event.preventDefault();
+
   const identifier=document.getElementById('login-identifier').value.trim();
   const password=document.getElementById('login-password').value.trim();
+
   if(!identifier||!password)return;
 
   showToast('लॉगिन चेक हो रहा है...');
+
   try{
     const response=await fetch('save_data.php',{
       method:'POST',
-      headers:{'Content-Type':'application/json','Accept':'application/json'},
-      body:JSON.stringify({action:'login_user',identifier,password})
+      headers:{
+        'Content-Type':'application/json',
+        'Accept':'application/json'
+      },
+      body:JSON.stringify({
+        action:'login_user',
+        identifier,
+        password
+      })
     });
+
     const result=await response.json();
+
     if(result.status==='success'){
       setCurrentUser(result.user);
       showToast('सर्वर लॉगिन सफल!');
       navigateTo('screen-dashboard');
       return;
     }
-  }catch(err){console.warn('Server login unavailable; local account check used.')}
+  }catch(err){
+    console.warn('Server login unavailable; local account check used.');
+  }
 
   const users=JSON.parse(localStorage.getItem(STORAGE_KEY_USERS)||'[]');
   const normalized=identifier.toLowerCase().replace(/\s+/g,'');
+
   const user=users.find(u=>{
     const emp=String(u.employeeId||'').toLowerCase().replace(/\s+/g,'');
-    return (emp===normalized||String(u.email||'').toLowerCase()===identifier.toLowerCase()||String(u.mobile||'')===identifier)&&u.password===password;
+    return (
+      emp===normalized ||
+      String(u.email||'').toLowerCase()===identifier.toLowerCase() ||
+      String(u.mobile||'')===identifier
+    ) && u.password===password;
   });
+
   if(user){
     setCurrentUser(user);
     showToast('स्वागत है!');
@@ -371,7 +423,6 @@ async function handleLoginSubmit(event){
 }
 
 function handleGoogleSignIn(){
-  // No fake/demo Google login. Real OAuth must be connected separately.
   alert('Google Sign-In is not connected yet. Please use your Employee ID / Email / Mobile login.');
 }
 
@@ -385,6 +436,7 @@ function confirmLogout(){
 
 async function handleRegisterSubmit(event){
   event.preventDefault();
+
   const name=document.getElementById('reg-name').value.trim();
   const dob=document.getElementById('reg-dob').value;
   const mobile=document.getElementById('reg-mobile').value.trim();
@@ -397,300 +449,831 @@ async function handleRegisterSubmit(event){
   const depotCode=document.getElementById('reg-depot-code').value.trim();
   const designation=document.getElementById('reg-designation').value.trim();
 
-  if(pass!==confirmPass){alert('दोनों पासवर्ड मेल नहीं खाते!');return}
+  if(pass!==confirmPass){
+    alert('दोनों पासवर्ड मेल नहीं खाते!');
+    return;
+  }
 
   const users=JSON.parse(localStorage.getItem(STORAGE_KEY_USERS)||'[]');
-  const duplicate=users.some(u=>String(u.employeeId||'').toLowerCase().replace(/\s+/g,'')===empId.toLowerCase().replace(/\s+/g,'')||String(u.email||'').toLowerCase()===email.toLowerCase()||String(u.mobile||'')===mobile);
-  if(duplicate){alert('यह Employee ID, Email या Mobile पहले से registered है.');return}
+
+  const duplicate=users.some(u=>
+    String(u.employeeId||'').toLowerCase().replace(/\s+/g,'')===empId.toLowerCase().replace(/\s+/g,'') ||
+    String(u.email||'').toLowerCase()===email.toLowerCase() ||
+    String(u.mobile||'')===mobile
+  );
+
+  if(duplicate){
+    alert('यह Employee ID, Email या Mobile पहले से registered है.');
+    return;
+  }
 
   const newUser={
-    id:'u_'+Date.now(),employeeId:empId,fullName:name,email,password:pass,mobile,dob,
-    depot,depotCode,designation,employeeType:type,photoUrl:''
+    id:'u_'+Date.now(),
+    employeeId:empId,
+    fullName:name,
+    email,
+    password:pass,
+    mobile,
+    dob,
+    depot,
+    depotCode,
+    designation,
+    employeeType:type,
+    photoUrl:''
   };
 
   users.push(newUser);
   localStorage.setItem(STORAGE_KEY_USERS,JSON.stringify(users));
   setCurrentUser(newUser);
+
   showToast('Account save किया जा रहा है...');
 
   try{
     const response=await fetch('save_data.php',{
       method:'POST',
-      headers:{'Content-Type':'application/json','Accept':'application/json'},
-      body:JSON.stringify({action:'register_user',...newUser})
+      headers:{
+        'Content-Type':'application/json',
+        'Accept':'application/json'
+      },
+      body:JSON.stringify({
+        action:'register_user',
+        ...newUser
+      })
     });
+
     const result=await response.json();
-    showToast(result.status==='success'?'यूज़र Hostinger MySQL में सेव हो गया!':'Local account saved; server response received.');
+
+    showToast(
+      result.status==='success'
+        ? 'यूज़र Hostinger MySQL में सेव हो गया!'
+        : 'Local account saved; server response received.'
+    );
   }catch(err){
     showToast('Local account saved; server connection नहीं बना.');
   }
+
   document.getElementById('register-form').reset();
   navigateTo('screen-dashboard');
 }
 
 function updateDashboardView(){
   const user=getCurrentUser();
-  if(!user){navigateTo('screen-login');return}
+
+  if(!user){
+    navigateTo('screen-login');
+    return;
+  }
+
   document.getElementById('dash-user-name').textContent=user.fullName||'Staff';
   document.getElementById('dash-user-cnd').textContent='| '+(user.employeeId||'Employee')+' |';
   document.getElementById('dash-user-depot').textContent=user.depot||'UPSRTC DEPOT';
-  document.getElementById('dash-user-verified').textContent=(user.designation||'UPSRTC Staff')+' • '+(user.depot||'DEPOT');
+  document.getElementById('dash-user-verified').textContent=
+    (user.designation||'UPSRTC Staff')+' • '+(user.depot||'DEPOT');
 
   const img=document.getElementById('dash-avatar-img');
   const svg=document.getElementById('dash-avatar-svg');
+
   if(user.photoUrl){
-    img.src=user.photoUrl;img.style.display='block';svg.style.display='none';
-  }else{img.style.display='none';svg.style.display='block'}
+    img.src=user.photoUrl;
+    img.style.display='block';
+    svg.style.display='none';
+  }else{
+    img.style.display='none';
+    svg.style.display='block';
+  }
 }
 
 function openExternalPortal(type){
-  const settings=JSON.parse(localStorage.getItem(STORAGE_KEY_SETTINGS)||'{}');
+  const settings=JSON.parse(
+    localStorage.getItem(STORAGE_KEY_SETTINGS)||'{}'
+  );
+
   const url=settings[type]||defaultPortalUrls[type];
-  if(url) window.open(url,'_blank','noopener,noreferrer');
+
+  if(url){
+    window.open(url,'_blank','noopener,noreferrer');
+  }
 }
 
+/* Date comes from the device/system date. */
 function setDutyDateToday(){
   const d=new Date();
-  document.getElementById('duty-date').value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-}
-function setDutyDateYesterday(){
-  const d=new Date();d.setDate(d.getDate()-1);
-  document.getElementById('duty-date').value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+
+  document.getElementById('duty-date').value=
+    d.getFullYear()+'-'+
+    String(d.getMonth()+1).padStart(2,'0')+'-'+
+    String(d.getDate()).padStart(2,'0');
 }
 
-/* Correct load-factor formula:
-   Load Factor % = passengers / seats * 100
-   If passengers exceed seats, it is capped at 100% for display.
+function setDutyDateYesterday(){
+  const d=new Date();
+  d.setDate(d.getDate()-1);
+
+  document.getElementById('duty-date').value=
+    d.getFullYear()+'-'+
+    String(d.getMonth()+1).padStart(2,'0')+'-'+
+    String(d.getDate()).padStart(2,'0');
+}
+
+/*
+  Previous entry is kept as a local draft.
+  When Feed Duty opens again, the previous data is loaded automatically.
+  The user can change any field manually before saving the next duty.
 */
-function calculateLoadFactor(){
-  const passengers=parseFloat(document.getElementById('duty-passengers').value);
-  const seats=parseFloat(document.getElementById('duty-seats').value);
-  const output=document.getElementById('duty-load-factor');
-  if(!Number.isFinite(passengers)||!Number.isFinite(seats)||seats<=0){
-    output.value='0.0%';
-    return;
+function saveDutyDraft(){
+  const draft={
+    busNumber:document.getElementById('duty-bus')?.value||'',
+    route:document.getElementById('duty-route')?.value||'',
+    totalKm:document.getElementById('duty-total-km')?.value||'',
+    loadFactor:document.getElementById('duty-load-factor')?.value||'',
+    income:document.getElementById('duty-income')?.value||'',
+    remarks:document.getElementById('duty-remarks')?.value||''
+  };
+
+  localStorage.setItem(STORAGE_KEY_DUTY_DRAFT,JSON.stringify(draft));
+}
+
+function loadDutyDraft(){
+  const raw=localStorage.getItem(STORAGE_KEY_DUTY_DRAFT);
+
+  if(!raw)return;
+
+  try{
+    const draft=JSON.parse(raw);
+
+    if(document.getElementById('duty-bus'))
+      document.getElementById('duty-bus').value=draft.busNumber||'';
+
+    if(document.getElementById('duty-route'))
+      document.getElementById('duty-route').value=draft.route||'';
+
+    if(document.getElementById('duty-total-km'))
+      document.getElementById('duty-total-km').value=draft.totalKm||'';
+
+    if(document.getElementById('duty-load-factor'))
+      document.getElementById('duty-load-factor').value=draft.loadFactor||'';
+
+    if(document.getElementById('duty-income'))
+      document.getElementById('duty-income').value=draft.income||'';
+
+    if(document.getElementById('duty-remarks'))
+      document.getElementById('duty-remarks').value=draft.remarks||'';
+  }catch(e){
+    console.warn('Duty draft could not be loaded.');
   }
-  const lf=(passengers/seats)*100;
-  output.value=Math.max(0,Math.min(lf,100)).toFixed(1)+'%';
+}
+
+function prepareDutyEntryForm(){
+  /*
+    Date is always set to the current date when entering Feed Duty.
+    All other fields retain the previous saved entry.
+  */
+  setDutyDateToday();
+  loadDutyDraft();
 }
 
 async function handleDutySubmit(event){
   event.preventDefault();
+
   const user=getCurrentUser();
-  if(!user){navigateTo('screen-login');return}
 
-  const totalKm=parseFloat(document.getElementById('duty-total-km').value);
-  if(!Number.isFinite(totalKm)||totalKm<0){alert('कृपया Total KM सही तरीके से दर्ज करें.');return}
+  if(!user){
+    navigateTo('screen-login');
+    return;
+  }
 
-  const passengers=parseInt(document.getElementById('duty-passengers').value,10)||0;
-  const seats=parseInt(document.getElementById('duty-seats').value,10)||0;
-  const loadFactor=seats>0?Math.max(0,Math.min((passengers/seats)*100,100)):0;
+  const totalKm=parseFloat(
+    document.getElementById('duty-total-km').value
+  );
+
+  const loadFactor=parseFloat(
+    document.getElementById('duty-load-factor').value
+  );
+
+  const income=parseFloat(
+    document.getElementById('duty-income').value
+  );
+
+  if(!Number.isFinite(totalKm)||totalKm<0){
+    alert('कृपया Kilometer सही तरीके से दर्ज करें.');
+    return;
+  }
+
+  if(!Number.isFinite(loadFactor)||loadFactor<0){
+    alert('कृपया Load Factor सही तरीके से दर्ज करें.');
+    return;
+  }
+
+  if(!Number.isFinite(income)||income<0){
+    alert('कृपया Income सही तरीके से दर्ज करें.');
+    return;
+  }
 
   const newDuty={
     id:'duty_'+Date.now(),
     userId:user.id,
     employeeId:user.employeeId,
+
     dutyDate:document.getElementById('duty-date').value,
-    dutyNumber:document.getElementById('duty-num').value.trim(),
-    shift:document.getElementById('duty-shift').value,
+
     busNumber:document.getElementById('duty-bus').value.trim(),
-    routeFrom:document.getElementById('duty-from').value.trim(),
-    routeTo:document.getElementById('duty-to').value.trim(),
-    departureTime:document.getElementById('duty-dep-time').value,
-    arrivalTime:document.getElementById('duty-arr-time').value,
+
+    route:document.getElementById('duty-route').value.trim(),
+
     totalKm:totalKm,
-    passengerCount:passengers,
-    totalSeats:seats,
+
     loadFactor:Number(loadFactor.toFixed(1)),
-    income:parseFloat(document.getElementById('duty-income').value)||0,
-    expenses:parseFloat(document.getElementById('duty-expenses').value)||0,
+
+    income:income,
+
     remarks:document.getElementById('duty-remarks').value.trim()
   };
 
-  const duties=JSON.parse(localStorage.getItem(STORAGE_KEY_DUTIES)||'[]');
+  const duties=JSON.parse(
+    localStorage.getItem(STORAGE_KEY_DUTIES)||'[]'
+  );
+
   duties.unshift(newDuty);
-  localStorage.setItem(STORAGE_KEY_DUTIES,JSON.stringify(duties));
+
+  localStorage.setItem(
+    STORAGE_KEY_DUTIES,
+    JSON.stringify(duties)
+  );
+
+  /*
+    IMPORTANT:
+    Do not reset the form after saving.
+    The same values remain available for the next duty entry.
+  */
+  saveDutyDraft();
+
   showToast('ड्यूटी सर्वर पर भेजी जा रही है...');
 
   try{
     const response=await fetch('save_data.php',{
       method:'POST',
-      headers:{'Content-Type':'application/json','Accept':'application/json'},
-      body:JSON.stringify({action:'save_duty',...newDuty})
+      headers:{
+        'Content-Type':'application/json',
+        'Accept':'application/json'
+      },
+      body:JSON.stringify({
+        action:'save_duty',
+        ...newDuty
+      })
     });
+
     if(response.ok){
       const result=await response.json();
-      showToast(result.status==='success'?'ड्यूटी Hostinger MySQL पर सेव हो गई!':'Local duty saved; server response received.');
+
+      showToast(
+        result.status==='success'
+          ? 'ड्यूटी Hostinger MySQL पर सेव हो गई!'
+          : 'Local duty saved; server response received.'
+      );
     }else{
-      showToast('Local duty saved; server response '+response.status);
+      showToast(
+        'Local duty saved; server response '+response.status
+      );
     }
   }catch(err){
-    showToast('ड्यूटी local में सुरक्षित है; server connection नहीं बना.');
+    showToast(
+      'ड्यूटी local में सुरक्षित है; server connection नहीं बना.'
+    );
   }
 
-  document.getElementById('feed-duty-form').reset();
-  setDutyDateToday();
-  document.getElementById('duty-load-factor').value='0.0%';
   navigateTo('screen-show-data');
 }
 
+/*
+  SHOW DATA:
+  - Duty count = total entries
+  - Total KM = SUM of all KM
+  - Income = SUM of all income
+  - Average LF = average of all manually entered load factors
+*/
 function renderDutyTable(){
   const user=getCurrentUser();
+
   if(!user)return;
-  const filterMonth=document.getElementById('report-month-filter').value;
-  const allDuties=JSON.parse(localStorage.getItem(STORAGE_KEY_DUTIES)||'[]');
-  const filtered=allDuties.filter(d=>(d.userId===user.id||d.employeeId===user.employeeId)&&(!filterMonth||String(d.dutyDate||'').startsWith(filterMonth))).sort((a,b)=>String(b.dutyDate).localeCompare(String(a.dutyDate)));
 
-  let totalKm=0,totalIncome=0,sumLf=0;
-  filtered.forEach(d=>{totalKm+=Number(d.totalKm)||0;totalIncome+=Number(d.income)||0;sumLf+=Number(d.loadFactor)||0});
-  const avgLf=filtered.length?sumLf/filtered.length:0;
+  const filterMonth=
+    document.getElementById('report-month-filter').value;
 
-  document.getElementById('kpi-duties').textContent=filtered.length;
-  document.getElementById('kpi-km').textContent=totalKm;
-  document.getElementById('kpi-income').textContent='₹'+totalIncome.toLocaleString('en-IN');
-  document.getElementById('kpi-lf').textContent=avgLf.toFixed(1)+'%';
+  const allDuties=JSON.parse(
+    localStorage.getItem(STORAGE_KEY_DUTIES)||'[]'
+  );
+
+  const filtered=allDuties
+    .filter(d=>
+      (d.userId===user.id||d.employeeId===user.employeeId) &&
+      (!filterMonth||
+       String(d.dutyDate||'').startsWith(filterMonth))
+    )
+    .sort((a,b)=>
+      String(b.dutyDate).localeCompare(String(a.dutyDate))
+    );
+
+  let totalKm=0;
+  let totalIncome=0;
+  let lfTotal=0;
+  let lfCount=0;
+
+  filtered.forEach(d=>{
+    totalKm+=Number(d.totalKm)||0;
+    totalIncome+=Number(d.income)||0;
+
+    const lf=Number(d.loadFactor);
+
+    if(Number.isFinite(lf)){
+      lfTotal+=lf;
+      lfCount++;
+    }
+  });
+
+  const averageLf=
+    lfCount>0
+      ? lfTotal/lfCount
+      : 0;
+
+  document.getElementById('kpi-duties').textContent=
+    filtered.length;
+
+  document.getElementById('kpi-km').textContent=
+    totalKm;
+
+  document.getElementById('kpi-income').textContent=
+    '₹'+totalIncome.toLocaleString('en-IN');
+
+  document.getElementById('kpi-lf').textContent=
+    averageLf.toFixed(1)+'%';
 
   const tbody=document.getElementById('duty-table-body');
+
   tbody.innerHTML='';
+
   if(!filtered.length){
-    tbody.innerHTML='<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--text-gray)">No duty entries logged for this month.</td></tr>';
+    tbody.innerHTML=
+      '<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--text-gray)">No duty entries logged for this month.</td></tr>';
+
     return;
   }
 
   filtered.forEach(d=>{
     const tr=document.createElement('tr');
-    tr.style.borderBottom='1px solid var(--border-subtle)';
+
+    tr.style.borderBottom=
+      '1px solid var(--border-subtle)';
+
     tr.innerHTML=
-      '<td style="padding:10px 8px;color:#FFF;font-weight:600">'+escapeHtml(d.dutyDate)+'</td>'+
-      '<td style="padding:10px 8px;color:var(--yellow)">'+escapeHtml(d.busNumber)+'</td>'+
-      '<td style="padding:10px 8px;color:var(--cyan)">'+escapeHtml(d.routeFrom)+' → '+escapeHtml(d.routeTo)+'</td>'+
-      '<td style="padding:10px 8px;font-weight:700">'+Number(d.totalKm||0)+'</td>'+
-      '<td style="padding:10px 8px;color:var(--green);font-weight:700">₹'+Number(d.income||0).toLocaleString('en-IN')+'</td>'+
-      '<td style="padding:10px 8px">'+Number(d.loadFactor||0).toFixed(1)+'%</td>'+
-      '<td style="padding:10px 8px"><button onclick="deleteDuty(\''+String(d.id).replace(/'/g,"\\'")+'\')" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:14px">🗑️</button></td>';
+      '<td style="padding:10px 8px;color:#FFF;font-weight:600">'+
+      escapeHtml(d.dutyDate)+
+      '</td>'+
+
+      '<td style="padding:10px 8px;color:var(--yellow)">'+
+      escapeHtml(d.busNumber)+
+      '</td>'+
+
+      '<td style="padding:10px 8px;color:var(--cyan)">'+
+      escapeHtml(d.route)+
+      '</td>'+
+
+      '<td style="padding:10px 8px;font-weight:700">'+
+      Number(d.totalKm||0)+
+      '</td>'+
+
+      '<td style="padding:10px 8px;color:var(--green);font-weight:700">'+
+      '₹'+Number(d.income||0).toLocaleString('en-IN')+
+      '</td>'+
+
+      '<td style="padding:10px 8px">'+
+      Number(d.loadFactor||0).toFixed(1)+
+      '%</td>'+
+
+      '<td style="padding:10px 8px">'+
+      '<button onclick="deleteDuty(\''+
+      String(d.id).replace(/'/g,"\\'")+
+      '\')" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:14px">🗑️</button>'+
+      '</td>';
+
     tbody.appendChild(tr);
   });
 }
 
 function escapeHtml(value){
-  return String(value??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+  return String(value??'').replace(
+    /[&<>"']/g,
+    m=>({
+      '&':'&amp;',
+      '<':'&lt;',
+      '>':'&gt;',
+      '"':'&quot;',
+      "'":'&#039;'
+    }[m])
+  );
 }
 
 function deleteDuty(id){
   if(!confirm('Delete this duty record?'))return;
-  let duties=JSON.parse(localStorage.getItem(STORAGE_KEY_DUTIES)||'[]');
+
+  let duties=JSON.parse(
+    localStorage.getItem(STORAGE_KEY_DUTIES)||'[]'
+  );
+
   duties=duties.filter(d=>d.id!==id);
-  localStorage.setItem(STORAGE_KEY_DUTIES,JSON.stringify(duties));
+
+  localStorage.setItem(
+    STORAGE_KEY_DUTIES,
+    JSON.stringify(duties)
+  );
+
   showToast('Record deleted.');
+
   renderDutyTable();
 }
 
 function exportDataCSV(){
   const user=getCurrentUser();
-  const allDuties=JSON.parse(localStorage.getItem(STORAGE_KEY_DUTIES)||'[]');
-  const records=allDuties.filter(d=>d.userId===user.id||d.employeeId===user.employeeId);
-  if(!records.length){alert('No duty records found to export!');return}
 
-  let csv='Date,Duty No,Shift,Bus No,From,To,Departure,Arrival,Total KM,Passengers,Seats,Load Factor %,Income INR,Expenses INR,Remarks\n';
+  const allDuties=JSON.parse(
+    localStorage.getItem(STORAGE_KEY_DUTIES)||'[]'
+  );
+
+  const records=allDuties.filter(
+    d=>d.userId===user.id||d.employeeId===user.employeeId
+  );
+
+  if(!records.length){
+    alert('No duty records found to export!');
+    return;
+  }
+
+  let csv=
+    'Date,Bus No,Route,Total KM,Load Factor %,Income INR,Remarks\n';
+
   records.forEach(d=>{
-    csv+=`"${d.dutyDate}","${d.dutyNumber}","${d.shift}","${d.busNumber}","${d.routeFrom}","${d.routeTo}","${d.departureTime}","${d.arrivalTime}",${d.totalKm},${d.passengerCount},${d.totalSeats},"${d.loadFactor}%",${d.income},${d.expenses},"${String(d.remarks||'').replace(/"/g,'""')}"\n`;
+    csv+=
+      `"${d.dutyDate}",`+
+      `"${d.busNumber}",`+
+      `"${d.route}",`+
+      `${d.totalKm},`+
+      `"${d.loadFactor}%",`+
+      `${d.income},`+
+      `"${String(d.remarks||'').replace(/"/g,'""')}"\n`;
   });
-  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+
+  const blob=new Blob(
+    [csv],
+    {type:'text/csv;charset=utf-8'}
+  );
+
   const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');a.href=url;a.download='UPSRTC_Duty_Logs_'+(user.employeeId||'staff')+'.csv';a.click();
+
+  const a=document.createElement('a');
+
+  a.href=url;
+  a.download=
+    'UPSRTC_Duty_Logs_'+
+    (user.employeeId||'staff')+
+    '.csv';
+
+  a.click();
+
   URL.revokeObjectURL(url);
 }
 
 function printDutySheet(){
   const user=getCurrentUser();
-  if(!user)return;
-  const filterMonth=document.getElementById('report-month-filter').value;
-  const allDuties=JSON.parse(localStorage.getItem(STORAGE_KEY_DUTIES)||'[]');
-  const filtered=allDuties.filter(d=>(d.userId===user.id||d.employeeId===user.employeeId)&&(!filterMonth||String(d.dutyDate||'').startsWith(filterMonth)));
 
-  let rows='',sumKm=0,sumIncome=0;
+  if(!user)return;
+
+  const filterMonth=
+    document.getElementById('report-month-filter').value;
+
+  const allDuties=JSON.parse(
+    localStorage.getItem(STORAGE_KEY_DUTIES)||'[]'
+  );
+
+  const filtered=allDuties.filter(d=>
+    (d.userId===user.id||d.employeeId===user.employeeId) &&
+    (!filterMonth||
+     String(d.dutyDate||'').startsWith(filterMonth))
+  );
+
+  let rows='';
+  let sumKm=0;
+  let sumIncome=0;
+  let lfTotal=0;
+  let lfCount=0;
+
   filtered.forEach((d,i)=>{
-    sumKm+=Number(d.totalKm)||0;sumIncome+=Number(d.income)||0;
-    rows+=`<tr><td>${i+1}</td><td>${escapeHtml(d.dutyDate)}</td><td>${escapeHtml(d.busNumber)}</td><td>${escapeHtml(d.routeFrom)} - ${escapeHtml(d.routeTo)}</td><td>${escapeHtml(d.departureTime||'')} / ${escapeHtml(d.arrivalTime||'')}</td><td>${d.totalKm}</td><td>${d.passengerCount} (${Number(d.loadFactor||0).toFixed(1)}%)</td><td>₹${Number(d.income||0).toLocaleString('en-IN')}</td></tr>`;
+    sumKm+=Number(d.totalKm)||0;
+    sumIncome+=Number(d.income)||0;
+
+    const lf=Number(d.loadFactor);
+
+    if(Number.isFinite(lf)){
+      lfTotal+=lf;
+      lfCount++;
+    }
+
+    rows+=
+      '<tr>'+
+      '<td>'+String(i+1)+'</td>'+
+      '<td>'+escapeHtml(d.dutyDate)+'</td>'+
+      '<td>'+escapeHtml(d.busNumber)+'</td>'+
+      '<td>'+escapeHtml(d.route)+'</td>'+
+      '<td>'+Number(d.totalKm||0)+'</td>'+
+      '<td>'+Number(d.loadFactor||0).toFixed(1)+'%</td>'+
+      '<td>₹'+Number(d.income||0).toLocaleString('en-IN')+'</td>'+
+      '<td>'+escapeHtml(d.remarks||'')+'</td>'+
+      '</tr>';
   });
 
-  const printHtml=`<!DOCTYPE html><html><head><title>UPSRTC Duty Log Sheet</title><style>
-  body{font-family:Arial,sans-serif;padding:20px;color:#000}.header{text-align:center;border-bottom:2px solid #000;padding-bottom:10px;margin-bottom:15px}.title{font-size:18px;font-weight:bold}.meta{display:flex;justify-content:space-between;margin-bottom:12px;font-size:12px}table{width:100%;border-collapse:collapse;margin-top:10px}th,td{border:1px solid #444;padding:6px;font-size:11px;text-align:left}th{background:#EEE}.sign{margin-top:40px;display:flex;justify-content:space-between;font-size:12px;font-weight:bold}
-  </style></head><body><div class="header"><div class="title">UTTAR PRADESH STATE ROAD TRANSPORT CORPORATION</div><div>CREW MONTHLY DUTY PERFORMANCE LOG SHEET</div></div>
-  <div class="meta"><div><strong>Staff:</strong> ${escapeHtml(user.fullName)} (${escapeHtml(user.employeeId)})</div><div><strong>Depot:</strong> ${escapeHtml(user.depot)}</div><div><strong>Month:</strong> ${escapeHtml(filterMonth||'All Records')}</div></div>
-  <table><thead><tr><th>#</th><th>Date</th><th>Bus No</th><th>Route</th><th>Dep/Arr</th><th>KM</th><th>Pax (LF)</th><th>Income (₹)</th></tr></thead><tbody>${rows}</tbody><tfoot><tr style="font-weight:bold;background:#FAFAFA"><td colspan="5" style="text-align:right">TOTAL:</td><td>${sumKm} KM</td><td>-</td><td>₹${sumIncome.toLocaleString('en-IN')}</td></tr></tfoot></table>
-  <div class="sign"><div>Conductor/Driver Signature</div><div>Station In-Charge Signature</div></div></body></html>`;
+  const averageLf=
+    lfCount>0
+      ? lfTotal/lfCount
+      : 0;
+
+  const printHtml=
+`<!DOCTYPE html>
+<html>
+<head>
+<title>UPSRTC Duty Log Sheet</title>
+<style>
+body{font-family:Arial,sans-serif;padding:20px;color:#000}
+.header{text-align:center;border-bottom:2px solid #000;padding-bottom:10px;margin-bottom:15px}
+.title{font-size:18px;font-weight:bold}
+.meta{display:flex;justify-content:space-between;margin-bottom:12px;font-size:12px}
+.summary{display:flex;gap:30px;margin:10px 0;font-size:12px;font-weight:bold}
+table{width:100%;border-collapse:collapse;margin-top:10px}
+th,td{border:1px solid #444;padding:6px;font-size:11px;text-align:left}
+th{background:#EEE}
+.sign{margin-top:40px;display:flex;justify-content:space-between;font-size:12px;font-weight:bold}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="title">UTTAR PRADESH STATE ROAD TRANSPORT CORPORATION</div>
+  <div>CREW MONTHLY DUTY PERFORMANCE LOG SHEET</div>
+</div>
+
+<div class="meta">
+  <div><strong>Staff:</strong> ${escapeHtml(user.fullName)}</div>
+  <div><strong>Employee ID:</strong> ${escapeHtml(user.employeeId)}</div>
+  <div><strong>Depot:</strong> ${escapeHtml(user.depot)}</div>
+  <div><strong>Month:</strong> ${escapeHtml(filterMonth||'All Records')}</div>
+</div>
+
+<div class="summary">
+  <div>Total Duties: ${filtered.length}</div>
+  <div>Total KM: ${sumKm}</div>
+  <div>Average Load Factor: ${averageLf.toFixed(1)}%</div>
+  <div>Total Income: ₹${sumIncome.toLocaleString('en-IN')}</div>
+</div>
+
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Date</th>
+<th>Bus No</th>
+<th>Route</th>
+<th>KM</th>
+<th>Load Factor</th>
+<th>Income</th>
+<th>Remarks</th>
+</tr>
+</thead>
+
+<tbody>${rows}</tbody>
+
+<tfoot>
+<tr style="font-weight:bold;background:#FAFAFA">
+<td colspan="4" style="text-align:right">TOTAL / AVERAGE:</td>
+<td>${sumKm} KM</td>
+<td>${averageLf.toFixed(1)}%</td>
+<td>₹${sumIncome.toLocaleString('en-IN')}</td>
+<td>-</td>
+</tr>
+</tfoot>
+</table>
+
+<div class="sign">
+  <div>Conductor/Driver Signature</div>
+  <div>Station In-Charge Signature</div>
+</div>
+
+</body>
+</html>`;
 
   const w=window.open('','_blank');
-  if(!w){alert('Please allow pop-ups for PDF/Print.');return}
-  w.document.write(printHtml);w.document.close();w.focus();
-  setTimeout(()=>{w.print();w.close()},500);
+
+  if(!w){
+    alert('Please allow pop-ups for PDF/Print.');
+    return;
+  }
+
+  w.document.write(printHtml);
+  w.document.close();
+  w.focus();
+
+  setTimeout(()=>{
+    w.print();
+    w.close();
+  },500);
 }
 
 function populateProfileForm(){
-  const user=getCurrentUser();if(!user)return;
-  document.getElementById('prof-name').value=user.fullName||'';
-  document.getElementById('prof-mobile').value=user.mobile||'';
-  document.getElementById('prof-dob').value=user.dob||'';
-  document.getElementById('prof-depot').value=user.depot||'';
-  document.getElementById('prof-depot-code').value=user.depotCode||'';
-  document.getElementById('prof-designation').value=user.designation||'';
+  const user=getCurrentUser();
 
-  const img=document.getElementById('profile-edit-avatar-img'),svg=document.getElementById('profile-edit-avatar-svg');
-  if(user.photoUrl){img.src=user.photoUrl;img.style.display='block';svg.style.display='none'}else{img.style.display='none';svg.style.display='block'}
+  if(!user)return;
+
+  document.getElementById('prof-name').value=
+    user.fullName||'';
+
+  document.getElementById('prof-mobile').value=
+    user.mobile||'';
+
+  document.getElementById('prof-dob').value=
+    user.dob||'';
+
+  document.getElementById('prof-depot').value=
+    user.depot||'';
+
+  document.getElementById('prof-depot-code').value=
+    user.depotCode||'';
+
+  document.getElementById('prof-designation').value=
+    user.designation||'';
+
+  const img=
+    document.getElementById('profile-edit-avatar-img');
+
+  const svg=
+    document.getElementById('profile-edit-avatar-svg');
+
+  if(user.photoUrl){
+    img.src=user.photoUrl;
+    img.style.display='block';
+    svg.style.display='none';
+  }else{
+    img.style.display='none';
+    svg.style.display='block';
+  }
 }
 
 function handlePhotoUpload(event){
-  const file=event.target.files[0];if(!file)return;
-  if(file.size>2*1024*1024){alert('Photo should be 2 MB or smaller.');return}
+  const file=event.target.files[0];
+
+  if(!file)return;
+
+  if(file.size>2*1024*1024){
+    alert('Photo should be 2 MB or smaller.');
+    return;
+  }
+
   const reader=new FileReader();
+
   reader.onload=e=>{
-    const user=getCurrentUser();if(!user)return;
-    user.photoUrl=e.target.result;setCurrentUser(user);updateUserInDatabase(user);populateProfileForm();showToast('Profile photo updated!');
+    const user=getCurrentUser();
+
+    if(!user)return;
+
+    user.photoUrl=e.target.result;
+
+    setCurrentUser(user);
+    updateUserInDatabase(user);
+    populateProfileForm();
+
+    showToast('Profile photo updated!');
   };
+
   reader.readAsDataURL(file);
 }
 
 function handleProfileUpdate(event){
   event.preventDefault();
-  const user=getCurrentUser();if(!user)return;
-  user.fullName=document.getElementById('prof-name').value.trim();
-  user.mobile=document.getElementById('prof-mobile').value.trim();
-  user.dob=document.getElementById('prof-dob').value;
-  user.depot=document.getElementById('prof-depot').value.trim();
-  user.depotCode=document.getElementById('prof-depot-code').value.trim();
-  user.designation=document.getElementById('prof-designation').value.trim();
-  setCurrentUser(user);updateUserInDatabase(user);showToast('Profile saved successfully!');updateDashboardView();
+
+  const user=getCurrentUser();
+
+  if(!user)return;
+
+  user.fullName=
+    document.getElementById('prof-name').value.trim();
+
+  user.mobile=
+    document.getElementById('prof-mobile').value.trim();
+
+  user.dob=
+    document.getElementById('prof-dob').value;
+
+  user.depot=
+    document.getElementById('prof-depot').value.trim();
+
+  user.depotCode=
+    document.getElementById('prof-depot-code').value.trim();
+
+  user.designation=
+    document.getElementById('prof-designation').value.trim();
+
+  setCurrentUser(user);
+
+  updateUserInDatabase(user);
+
+  showToast('Profile saved successfully!');
+
+  updateDashboardView();
 }
 
 function handlePasswordChange(event){
   event.preventDefault();
-  const user=getCurrentUser();if(!user)return;
-  const newPass=document.getElementById('prof-new-pass').value;
-  if(newPass.length<6){alert('Password must be at least 6 characters.');return}
-  user.password=newPass;setCurrentUser(user);updateUserInDatabase(user);
+
+  const user=getCurrentUser();
+
+  if(!user)return;
+
+  const newPass=
+    document.getElementById('prof-new-pass').value;
+
+  if(newPass.length<6){
+    alert('Password must be at least 6 characters.');
+    return;
+  }
+
+  user.password=newPass;
+
+  setCurrentUser(user);
+  updateUserInDatabase(user);
+
   document.getElementById('prof-new-pass').value='';
+
   showToast('Password changed successfully!');
 }
 
 function updateUserInDatabase(user){
-  const users=JSON.parse(localStorage.getItem(STORAGE_KEY_USERS)||'[]');
-  const index=users.findIndex(u=>u.id===user.id||u.employeeId===user.employeeId);
-  if(index!==-1){users[index]=user;localStorage.setItem(STORAGE_KEY_USERS,JSON.stringify(users))}
+  const users=JSON.parse(
+    localStorage.getItem(STORAGE_KEY_USERS)||'[]'
+  );
+
+  const index=users.findIndex(
+    u=>u.id===user.id||u.employeeId===user.employeeId
+  );
+
+  if(index!==-1){
+    users[index]=user;
+
+    localStorage.setItem(
+      STORAGE_KEY_USERS,
+      JSON.stringify(users)
+    );
+  }
 }
 
 function showToast(text){
   const toast=document.getElementById('toast-msg');
-  toast.textContent=text;toast.classList.add('show');
+
+  toast.textContent=text;
+  toast.classList.add('show');
+
   clearTimeout(window.__toastTimer);
-  window.__toastTimer=setTimeout(()=>toast.classList.remove('show'),3000);
+
+  window.__toastTimer=setTimeout(
+    ()=>toast.classList.remove('show'),
+    3000
+  );
 }
+
+/*
+  Automatically save current Feed Duty form values while typing.
+  This means accidental navigation or opening another screen
+  will not erase the previous entry data.
+*/
+document.addEventListener('input',event=>{
+  const id=event.target?.id;
+
+  if([
+    'duty-bus',
+    'duty-route',
+    'duty-total-km',
+    'duty-load-factor',
+    'duty-income',
+    'duty-remarks'
+  ].includes(id)){
+    saveDutyDraft();
+  }
+});
 
 window.addEventListener('DOMContentLoaded',()=>{
   initializeStorage();
   updateLiveClock();
+
   const user=getCurrentUser();
-  navigateTo(user?'screen-dashboard':'screen-login');
+
+  navigateTo(
+    user
+      ? 'screen-dashboard'
+      : 'screen-login'
+  );
 });
 </script>
 </body>
