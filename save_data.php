@@ -1,191 +1,157 @@
 <?php
-/**
- * UPSRTC DUTY MANAGEMENT PORTAL - SECURE BACKEND API (save_data.php)
- * Hostinger Apache / PHP / MySQL Integration Endpoint
- */
-
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, OPTIONS, DELETE');
-header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
-header('Content-Type: application/json; charset=UTF-8');
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type");
+header("Content-Type: application/json; charset=UTF-8");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
-    echo json_encode(['status' => 'success', 'message' => 'Preflight OK']);
-    exit;
+    exit();
 }
 
-// =========================================================================
-// HOSTINGER DATABASE CONFIGURATION PLACEHOLDERS
-// Found in Hostinger hPanel -> Databases -> MySQL Databases
-// =========================================================================
-define('DB_HOST', 'localhost');                  // Usually 'localhost' on Hostinger
-define('DB_USER', 'u123456789_upsrtc_user');     // Replace with your Hostinger DB Username
-define('DB_PASS', 'Your_Secure_DB_Password_123'); // Replace with your Hostinger DB Password
-define('DB_NAME', 'u123456789_upsrtc_db');       // Replace with your Hostinger DB Name
-define('DB_PORT', 3306);
+// आपकी फोटो के अनुसार डेटाबेस क्रेडेंशियल्स
+$host = "localhost";
+$db_user = "u481314904_kishor";
+$db_pass = "Hariom@9452";
+$db_name = "u481314904_upsrtc_db";
 
-function sendJsonResponse($status, $message, $extra = [], $statusCode = 200) {
-    http_response_code($statusCode);
-    $payload = array_merge([
-        'status'    => $status,
-        'message'   => $message,
-        'timestamp' => date('Y-m-d H:i:s')
-    ], $extra);
-    echo json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-    exit;
+$conn = new mysqli($host, $db_user, $db_pass, $db_name);
+
+if ($conn->connect_error) {
+    echo json_encode(["status" => "error", "message" => "Database connection failed: " . $conn->connect_error]);
+    exit();
 }
 
-// -------------------------------------------------------------------------
-// Establish MySQLi Connection
-// -------------------------------------------------------------------------
-mysqli_report(MYSQLI_REPORT_OFF);
-$mysqli = @new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT);
+// टेबल्स अगर नहीं बनी हैं तो अपने आप बन जाएँगी
+$conn->query("CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    employee_id VARCHAR(50) UNIQUE,
+    full_name VARCHAR(100),
+    email VARCHAR(100),
+    mobile VARCHAR(20),
+    password VARCHAR(255),
+    dob DATE,
+    depot VARCHAR(100),
+    depot_code VARCHAR(50),
+    designation VARCHAR(100),
+    employee_type VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)");
 
-if ($mysqli->connect_errno) {
-    sendJsonResponse(
-        'error',
-        'Database connection failed: ' . $mysqli->connect_error,
-        ['code' => $mysqli->connect_errno],
-        500
-    );
-}
+$conn->query("CREATE TABLE IF NOT EXISTS duties (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id VARCHAR(50),
+    employee_id VARCHAR(50),
+    duty_date DATE,
+    duty_number VARCHAR(50),
+    shift VARCHAR(50),
+    bus_number VARCHAR(50),
+    route_from VARCHAR(100),
+    route_to VARCHAR(100),
+    departure_time VARCHAR(20),
+    arrival_time VARCHAR(20),
+    opening_km FLOAT,
+    closing_km FLOAT,
+    total_km FLOAT,
+    passengers INT,
+    seats INT,
+    load_factor FLOAT,
+    income FLOAT,
+    expenses FLOAT,
+    remarks TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)");
 
-$mysqli->set_charset('utf8mb4');
+$input = json_decode(file_get_contents("php://input"), true);
+$action = $input['action'] ?? '';
 
-// -------------------------------------------------------------------------
-// Parse JSON Payload
-// -------------------------------------------------------------------------
-$rawInput = file_get_contents('php://input');
-$requestData = [];
+// 1. यूज़र रजिस्ट्रेशन
+if ($action === 'register_user') {
+    $empId = $conn->real_escape_string($input['employeeId'] ?? '');
+    $name = $conn->real_escape_string($input['fullName'] ?? '');
+    $email = $conn->real_escape_string($input['email'] ?? '');
+    $pass = $conn->real_escape_string($input['password'] ?? '');
+    $mobile = $conn->real_escape_string($input['mobile'] ?? '');
+    $dob = !empty($input['dob']) ? $conn->real_escape_string($input['dob']) : '1990-01-01';
+    $depot = $conn->real_escape_string($input['depot'] ?? '');
+    $depotCode = $conn->real_escape_string($input['depotCode'] ?? '');
+    $designation = $conn->real_escape_string($input['designation'] ?? '');
+    $type = $conn->real_escape_string($input['employeeType'] ?? '');
 
-if (!empty($rawInput)) {
-    $decoded = json_decode($rawInput, true);
-    if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
-        $requestData = $decoded;
+    $sql = "INSERT INTO users (employee_id, full_name, email, password, mobile, dob, depot, depot_code, designation, employee_type) 
+            VALUES ('$empId', '$name', '$email', '$pass', '$mobile', '$dob', '$depot', '$depotCode', '$designation', '$type')
+            ON DUPLICATE KEY UPDATE full_name='$name', password='$pass', mobile='$mobile', depot='$depot'";
+
+    if ($conn->query($sql) === TRUE) {
+        echo json_encode(["status" => "success", "message" => "यूज़र आईडी और पासवर्ड सर्वर पर सेव हो गया"]);
+    } else {
+        echo json_encode(["status" => "error", "message" => "रजिस्ट्रेशन एरर: " . $conn->error]);
     }
 }
-if (empty($requestData)) {
-    $requestData = $_POST;
-}
 
-$action = $_GET['action'] ?? ($requestData['action'] ?? 'save_duty');
+// 2. यूज़र लॉगिन वेरिफिकेशन
+else if ($action === 'login_user') {
+    $ident = $conn->real_escape_string($input['identifier'] ?? '');
+    $pass = $conn->real_escape_string($input['password'] ?? '');
 
-// -------------------------------------------------------------------------
-// Action Router
-// -------------------------------------------------------------------------
-try {
-    switch ($action) {
-        case 'test':
-            $res = $mysqli->query("SELECT DATABASE() AS db, VERSION() AS version");
-            $info = $res ? $res->fetch_assoc() : [];
-            sendJsonResponse('success', 'Hostinger MySQL Database Connected Successfully!', [
-                'database' => $info['db'] ?? DB_NAME,
-                'mysql_version' => $info['version'] ?? 'Unknown'
-            ]);
-            break;
+    $sql = "SELECT * FROM users WHERE (employee_id='$ident' OR email='$ident' OR mobile='$ident') AND password='$pass' LIMIT 1";
+    $res = $conn->query($sql);
 
-        case 'save_duty':
-            if (empty($requestData['dutyDate']) || empty($requestData['busNumber'])) {
-                sendJsonResponse('error', 'Validation failed: dutyDate and busNumber are required.', [], 400);
-            }
-
-            $id = !empty($requestData['id']) ? trim($requestData['id']) : 'duty_' . round(microtime(true) * 1000);
-            $employeeId = !empty($requestData['employeeId']) ? trim($requestData['employeeId']) : 'CND 1901';
-            $userId = !empty($requestData['userId']) ? trim($requestData['userId']) : 'u1';
-            $dutyDate = trim($requestData['dutyDate']);
-            $dutyNumber = !empty($requestData['dutyNumber']) ? trim($requestData['dutyNumber']) : '01';
-            $shift = !empty($requestData['shift']) ? trim($requestData['shift']) : 'Morning';
-            $busNumber = trim($requestData['busNumber']);
-            $routeFrom = trim($requestData['routeFrom'] ?? '');
-            $routeTo = trim($requestData['routeTo'] ?? '');
-            $departureTime = trim($requestData['departureTime'] ?? '');
-            $arrivalTime = trim($requestData['arrivalTime'] ?? '');
-            $openingKm = floatval($requestData['openingKm'] ?? 0);
-            $closingKm = floatval($requestData['closingKm'] ?? 0);
-            $totalKm = floatval($requestData['totalKm'] ?? max(0, $closingKm - $openingKm));
-            $passengerCount = intval($requestData['passengerCount'] ?? 0);
-            $totalSeats = intval($requestData['totalSeats'] ?? 52);
-            $loadFactor = floatval($requestData['loadFactor'] ?? 0);
-            $income = floatval($requestData['income'] ?? 0);
-            $expenses = floatval($requestData['expenses'] ?? 0);
-            $remarks = trim($requestData['remarks'] ?? '');
-
-            // Prepared Statement for SQL Injection Security
-            $query = "INSERT INTO `duties` (
-                        `id`, `employee_id`, `user_id`, `duty_date`, `duty_number`,
-                        `shift`, `bus_number`, `route_from`, `route_to`, `departure_time`,
-                        `arrival_time`, `opening_km`, `closing_km`, `total_km`, `passenger_count`,
-                        `total_seats`, `load_factor`, `income`, `expenses`, `remarks`
-                      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                      ON DUPLICATE KEY UPDATE
-                        `duty_date` = VALUES(`duty_date`),
-                        `shift` = VALUES(`shift`),
-                        `bus_number` = VALUES(`bus_number`),
-                        `route_from` = VALUES(`route_from`),
-                        `route_to` = VALUES(`route_to`),
-                        `departure_time` = VALUES(`departure_time`),
-                        `arrival_time` = VALUES(`arrival_time`),
-                        `opening_km` = VALUES(`opening_km`),
-                        `closing_km` = VALUES(`closing_km`),
-                        `total_km` = VALUES(`total_km`),
-                        `passenger_count` = VALUES(`passenger_count`),
-                        `load_factor` = VALUES(`load_factor`),
-                        `income` = VALUES(`income`),
-                        `expenses` = VALUES(`expenses`),
-                        `remarks` = VALUES(`remarks`),
-                        `updated_at` = CURRENT_TIMESTAMP";
-
-            $stmt = $mysqli->prepare($query);
-            if (!$stmt) {
-                sendJsonResponse('error', 'Query preparation error: ' . $mysqli->error, [], 500);
-            }
-
-            $stmt->bind_param(
-                'sssssssssssdddiiddds',
-                $id, $employeeId, $userId, $dutyDate, $dutyNumber,
-                $shift, $busNumber, $routeFrom, $routeTo, $departureTime,
-                $arrivalTime, $openingKm, $closingKm, $totalKm, $passengerCount,
-                $totalSeats, $loadFactor, $income, $expenses, $remarks
-            );
-
-            if (!$stmt->execute()) {
-                $err = $stmt->error;
-                $stmt->close();
-                sendJsonResponse('error', 'Execution error: ' . $err, [], 500);
-            }
-
-            $affected = $stmt->affected_rows;
-            $stmt->close();
-
-            sendJsonResponse('success', 'Duty record saved successfully into Hostinger MySQL.', [
-                'id' => $id,
-                'dutyDate' => $dutyDate,
-                'busNumber' => $busNumber,
-                'income' => $income,
-                'totalKm' => $totalKm
-            ]);
-            break;
-
-        case 'delete_duty':
-            if (empty($requestData['id'])) {
-                sendJsonResponse('error', 'Missing duty ID.', [], 400);
-            }
-            $stmt = $mysqli->prepare("DELETE FROM `duties` WHERE `id` = ?");
-            $stmt->bind_param('s', $requestData['id']);
-            $stmt->execute();
-            $stmt->close();
-            sendJsonResponse('success', 'Duty deleted successfully.');
-            break;
-
-        default:
-            sendJsonResponse('error', 'Invalid action: ' . htmlspecialchars($action), [], 400);
-            break;
-    }
-} catch (Throwable $t) {
-    sendJsonResponse('error', 'Server error: ' . $t->getMessage(), [], 500);
-} finally {
-    if ($mysqli) {
-        $mysqli->close();
+    if ($res && $res->num_rows > 0) {
+        $row = $res->fetch_assoc();
+        echo json_encode([
+            "status" => "success",
+            "message" => "लॉगिन सफल",
+            "user" => [
+                "id" => 'u_' . $row['id'],
+                "employeeId" => $row['employee_id'],
+                "fullName" => $row['full_name'],
+                "email" => $row['email'],
+                "mobile" => $row['mobile'],
+                "depot" => $row['depot'],
+                "depotCode" => $row['depot_code'],
+                "designation" => $row['designation'],
+                "employeeType" => $row['employee_type'],
+                "photoUrl" => ""
+            ]
+        ]);
+    } else {
+        echo json_encode(["status" => "error", "message" => "गलत आईडी या पासवर्ड"]);
     }
 }
+
+// 3. ड्यूटी डेटा सेव करना
+else if ($action === 'save_duty') {
+    $empId = $conn->real_escape_string($input['employeeId'] ?? '');
+    $dutyDate = !empty($input['dutyDate']) ? $conn->real_escape_string($input['dutyDate']) : date('Y-m-d');
+    $dutyNum = $conn->real_escape_string($input['dutyNumber'] ?? '');
+    $shift = $conn->real_escape_string($input['shift'] ?? '');
+    $bus = $conn->real_escape_string($input['busNumber'] ?? '');
+    $from = $conn->real_escape_string($input['routeFrom'] ?? '');
+    $to = $conn->real_escape_string($input['routeTo'] ?? '');
+    $depTime = $conn->real_escape_string($input['departureTime'] ?? '');
+    $arrTime = $conn->real_escape_string($input['arrivalTime'] ?? '');
+    $openKm = floatval($input['openingKm'] ?? 0);
+    $closeKm = floatval($input['closingKm'] ?? 0);
+    $totalKm = floatval($input['totalKm'] ?? 0);
+    $pax = intval($input['passengerCount'] ?? 0);
+    $seats = intval($input['totalSeats'] ?? 52);
+    $lf = floatval($input['loadFactor'] ?? 0);
+    $income = floatval($input['income'] ?? 0);
+    $exp = floatval($input['expenses'] ?? 0);
+    $remarks = $conn->real_escape_string($input['remarks'] ?? '');
+
+    $sql = "INSERT INTO duties (employee_id, duty_date, duty_number, shift, bus_number, route_from, route_to, departure_time, arrival_time, opening_km, closing_km, total_km, passengers, seats, load_factor, income, expenses, remarks) 
+            VALUES ('$empId', '$dutyDate', '$dutyNum', '$shift', '$bus', '$from', '$to', '$depTime', '$arrTime', $openKm, $closeKm, $totalKm, $pax, $seats, $lf, $income, $exp, '$remarks')";
+
+    if ($conn->query($sql) === TRUE) {
+        echo json_encode(["status" => "success", "message" => "ड्यूटी सर्वर पर सुरक्षित हो गई"]);
+    } else {
+        echo json_encode(["status" => "error", "message" => "ड्यूटी सेव एरर: " . $conn->error]);
+    }
+} else {
+    echo json_encode(["status" => "error", "message" => "Invalid request"]);
+}
+
+$conn->close();
+?>
