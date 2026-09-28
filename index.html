@@ -1675,7 +1675,10 @@ function updateDashboardView(){
 function openExternalPortal(type){
   //const settings=JSON.parse(localStorage.getItem(STORAGE_KEY_SETTINGS)||'{}');
   //const url=settings[type]||defaultPortalUrls[type];
-  if(url) window.open(url, '_blank', 'noopener,noreferrer');
+  //if(url) window.open(url, '_blank', 'noopener,noreferrer');
+  const url = defaultPortalUrls[type];
+
+if(url) window.open(url, '_blank', 'noopener,noreferrer');
 }
 
 function formatDateInput(d){
